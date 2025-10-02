@@ -1,0 +1,40 @@
+.ranking-modal {
+  .modal-content {
+    background-color: #2b4464;
+    color: white;
+    border-radius: 12px;
+  }
+
+  .modal-header,
+  .modal-footer {
+    border: none;
+    background-color: #2b4464;
+    color: white;
+  }
+
+  .modal-title {
+    font-weight: bold;
+  }
+
+  .table {
+    background-color: #2b4464;
+    color: white;
+
+    th {
+      background-color: darken(#2b4464, 5%);
+      color: #f1f1f1;
+    }
+
+    td {
+      vertical-align: middle;
+    }
+
+    tr:nth-child(even) {
+      background-color: lighten(#2b4464, 5%);
+    }
+  }
+
+  button {
+    border-radius: 15px;
+  }
+}

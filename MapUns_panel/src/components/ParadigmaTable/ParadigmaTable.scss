@@ -1,0 +1,347 @@
+.ReactTable .rt-tbody {
+    overflow: overlay;
+}
+
+.btn-divider {
+    width: 5px;
+    max-width: 5px;
+    padding: 0px;
+}
+
+.btn-separator {
+    width: 20px;
+    max-width: 20px;
+    padding: 0px;
+}
+
+.rt-button-header {
+    box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.15);
+    user-select: none;
+    margin-bottom: 1px;
+    padding: 3px;
+}
+
+.Select.is-disabled,
+.Select.is-disabled>.Select-control {
+    background-color: #e6e6e6 !important;
+}
+
+.border-transparent,
+.background-transparent {
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none !important;
+}
+
+.border-transparent:hover,
+.background-transparent:hover {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-color: transparent;
+}
+
+.ReactTable.-striped.-highlight,
+.mimicTableHeader {
+    background: #e4e5e6;
+}
+
+.ReactTable {
+    margin-bottom: -10px !important;
+}
+
+.ReactTable .rt-thead .rt-resizable-header {
+    background-color: #003b3e;
+    color: #fff;
+}
+
+.ReactTable .rt-thead .rt-resizable-header-content {
+    margin-bottom: 2px;
+    text-align: left;
+}
+
+.ReactTable .rt-thead.-filters input,
+.ReactTable .rt-thead.-filters select {
+    background-color: #d7acac;//#c2c8d1;
+    padding: 0px 2px;
+    height: 23px;
+}
+
+.rt-th {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.rt-th .react-datepicker-wrapper {
+    width: 100%;
+}
+
+.rt-th .react-datepicker__input-container {
+    width: 100%;
+}
+
+.rt-th .react-datepicker__input-container input {
+    width: 100%;
+}
+
+.react-datepicker__time-list {
+    padding-right: 0px !important;
+}
+
+.ReactTable .rt-tbody .rt-td {
+    padding: 2px !important;
+}
+
+.ReactTable label {
+    margin-bottom: 0px !important;
+}
+
+.ReactTable .-pagination .-btn {
+    padding: unset;
+}
+
+.ReactTable .-pagination .-previous,
+.ReactTable .-pagination .-next,
+.ReactTable .-pagination .-pageInfo {
+    margin: unset;
+}
+
+.ReactTable .-pagination {
+    padding: 0px !important;
+    margin: 0px !important;
+    font-size: 0.875rem;
+}
+
+.rt-thead {
+    position: relative;
+}
+
+
+
+.rt-button-header {
+    border-radius: 5px 5px 0px 0px;
+}
+
+.ReactTable .rt-tbody {
+    max-height: calc(100vh - 185px);
+}
+
+.rt-thead-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+}
+@media(min-width:576px) {
+    .ReactTable .rt-thead.-header.rt-button-header {
+        height: 25px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .ReactTable .rt-tbody {
+        max-height: calc(100vh - 215px);
+    }
+
+    .rt-thead-title {
+        position: relative;
+        text-align: center;
+    }
+
+}
+
+.ReactTable .-pagination .-pageJump input {
+    width: 50px;
+    height: 29px;
+}
+
+.left-buttons button {
+    margin-right: 5px;
+}
+
+.right-buttons button {
+    margin-left: 5px;
+}
+
+#importe {
+    text-align: right !important;
+}
+
+/* Estilos para los filtros desplegables en ParadigmaTable.scss */
+
+.rt-th .rt-resizable-header-content {
+    overflow: visible !important;
+}
+
+.rt-th select[multiple] {
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:focus {
+        outline: 2px solid #007bff;
+        outline-offset: -2px;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    }
+    
+    &:hover {
+        border-color: #007bff;
+    }
+}
+
+.rt-th select[multiple] option {
+    padding: 3px 6px;
+    font-size: 11px;
+    
+    &:checked {
+        background: #007bff;
+        color: white;
+        font-weight: 500;
+    }
+    
+    &:hover {
+        background: #e9ecef;
+    }
+}
+
+/* Estilos específicos para navegadores webkit */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    .rt-th select[multiple] option:checked {
+        background: #007bff linear-gradient(0deg, #007bff 0%, #007bff 100%) !important;
+        color: white !important;
+    }
+}
+
+/* Estilos para el filtro avanzado desplegable */
+.advanced-multi-select {
+    .dropdown-toggle {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
+        &:hover {
+            border-color: #007bff;
+        }
+        
+        &.open {
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+    }
+    
+    .dropdown-menu {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        background: white;
+        
+        .search-input {
+            border: none;
+            border-bottom: 1px solid #eee;
+            
+            &:focus {
+                outline: none;
+                border-bottom-color: #007bff;
+            }
+        }
+        
+        .actions {
+            border-bottom: 1px solid #eee;
+            
+            button {
+                background: none;
+                border: none;
+                color: #007bff;
+                
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+        
+        .options-list {
+            max-height: 120px;
+            overflow-y: auto;
+            
+            .option-item {
+                display: flex;
+                align-items: center;
+                padding: 4px 8px;
+                cursor: pointer;
+                transition: background-color 0.15s ease;
+                
+                &:hover {
+                    background-color: #f8f9fa;
+                }
+                
+                &.selected {
+                    background-color: #f0f8ff;
+                    
+                    &:hover {
+                        background-color: #e6f3ff;
+                    }
+                }
+                
+                input[type="checkbox"] {
+                    margin-right: 8px;
+                    cursor: pointer;
+                }
+            }
+            
+            .no-results {
+                padding: 12px;
+                text-align: center;
+                color: #6c757d;
+                font-style: italic;
+            }
+        }
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .rt-th select[multiple] {
+        font-size: 10px;
+        min-height: 28px;
+    }
+    
+    .advanced-multi-select .dropdown-menu {
+        position: fixed !important;
+        top: auto !important;
+        left: 10px !important;
+        right: 10px !important;
+        width: auto !important;
+        max-width: calc(100vw - 20px);
+    }
+}
+
+/* Mejoras de accesibilidad */
+.rt-th select[multiple]:focus-visible,
+.advanced-multi-select .dropdown-toggle:focus-visible {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* Loading state */
+.filter-loading {
+    opacity: 0.6;
+    pointer-events: none;
+    
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 16px;
+        height: 16px;
+        margin: -8px 0 0 -8px;
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

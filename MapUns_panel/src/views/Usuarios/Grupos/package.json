@@ -1,0 +1,6 @@
+{
+  "name": "Grupos",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./Grupos.js"
+}

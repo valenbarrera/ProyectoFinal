@@ -1,0 +1,27 @@
+<!DOCTYPE html> {% load static %}
+
+<html lang=en>
+
+<head>
+    <meta charset=utf-8>
+    <meta http-equiv=X-UA-Compatible content="IE=edge">
+    <meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+    <meta name=description content="{{DESCRIPCION}}">
+    <meta name=author content="{{AUTOR}}">
+    <meta name=version content="{{version}}">
+    <link rel="shortcut icon" href="{% static "public/img/favicon.png" %}?version={{version}}">
+    <title>{{NOMBRE}}</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsT1m6bBdumM-VbrP6kFWbtErVLpPgXQ8&libraries=visualization"></script>
+    <link href="{% static "public/index.fonts.css" %}?version={{version}}" rel="stylesheet">
+    <link href="{% static "public/index.styles.css" %}?version={{version}}" rel="stylesheet">
+    <script>
+        var BASE_URL = "{{BASE_URL}}";
+    </script>
+</head>
+
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
+    <div id=root></div>
+    <script type="text/javascript" src="{% static "public/index.bundle.js" %}?version={{version}}"></script>
+</body>
+
+</html>

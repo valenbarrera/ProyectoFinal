@@ -1,0 +1,6 @@
+{
+  "name": "Permisos",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./Permisos.js"
+}

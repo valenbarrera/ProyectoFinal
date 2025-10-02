@@ -1,0 +1,46 @@
+.async-seeker-container {
+    .Select-control,
+    .btn {
+        border-bottom-right-radius: 0px !important;
+        border-top-right-radius: 0px !important;
+    }
+    .btn{
+        border-radius: 0px!important;
+    }
+}
+
+.Select-control {
+    width: 100%;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #3e515b;
+    background-color: #fff;
+    background-image: none;
+    background-clip: padding-box;
+    border: 1px solid #e6e6e6;
+    border-radius: 0;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+
+.Select-control:focus {
+    color: #3e515b;
+    background-color: #fff;
+    border-color: #8ad4ee;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(32, 168, 216, 0.25);
+}
+
+.Select-menu-outer {
+    width: auto!important;
+    min-width: 100%;
+    .Select-menu {
+        overflow-x: hidden;
+    }
+    @media (max-width: 576px) {
+        max-width: 100%;
+        .Select-option {
+            max-width: 100%;
+        }
+    }
+}
+

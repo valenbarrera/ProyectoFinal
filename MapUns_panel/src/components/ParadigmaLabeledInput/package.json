@@ -1,0 +1,6 @@
+{
+  "name": "ParadigmaLabeledInput",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./ParadigmaLabeledInput.js"
+}

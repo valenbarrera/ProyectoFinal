@@ -1,0 +1,11 @@
+{
+  "presets": [
+    ["react"], ["env"]
+  ],
+  "plugins": ["transform-object-rest-spread",
+    ["transform-class-properties", { "spec": true }],
+    ["transform-runtime", {
+    "polyfill": false,
+    "regenerator": true
+  }]]
+}

@@ -1,0 +1,6 @@
+[submodule "api/users"]
+	path = api/users
+	url = https://gitpds@bitbucket.org/paradigmadelsur/usuarios__00_basico.git
+[submodule "api/utilities"]
+	path = api/utilities
+	url = https://gitpds@bitbucket.org/paradigmadelsur/paradigmautilities.git

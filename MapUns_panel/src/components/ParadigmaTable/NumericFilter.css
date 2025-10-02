@@ -1,0 +1,133 @@
+.numeric-filter {
+    position: relative;
+    border: 1px solid rgba(0,0,0,0.1);
+    padding: 1px;
+}
+
+.numeric-filter__buttons {
+    right: 0;
+    position: absolute;
+    transition: right .2s ease;
+    top: 0;
+    bottom: 0;
+    height: 21px;
+    outline: none!important;
+    margin: auto 0;
+}
+
+.numeric-filter.has-value .numeric-filter__input {
+    padding-right: 10px!important;
+    width: calc(100% - 16px)!important;
+    margin-right: 16px;
+    border: 0;
+    border-radius: 0!important;
+}
+
+
+.numeric-filter__button {
+    background: none;
+    border: none;
+    padding: 0;
+    width: 16px;
+    height: 20px;
+    outline: none!important;
+}
+
+.numeric-filter__button-close {
+    display: none;
+    position: absolute;
+    left: 2px;
+    height: 22px;
+}
+
+.numeric-filter:hover .numeric-filter__button-close {
+    display: inline-block!important;
+}
+
+.numeric-filter__item {
+    list-style: none;
+    padding: 4px 8px;
+    margin: 2px 0;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 13px;
+}
+
+.numeric-filter__item:hover {
+    background: #f0f0f0;
+}
+
+.numeric-filter__item--active {
+    background: #dbdbdb;
+}
+
+.numeric-filter__item--active:hover {
+    background: #dbdbdb!important;
+}
+
+.numeric-filter .fa {
+    color: #696969;
+}
+
+.fa-equal {
+    width: 10px;
+    height: 12px;
+    background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDM2IDM2IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAzNiAzNjsiIHhtbDpzcGFjZT0icHJlc2VydmUiIHdpZHRoPSIxNnB4IiBoZWlnaHQ9IjE2cHgiPgo8Zz4KCTxyZWN0IHk9IjEyIiB3aWR0aD0iMzYiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPgoJPHJlY3QgeT0iMjIiIHdpZHRoPSIzNiIgaGVpZ2h0PSIyIiBmaWxsPSIjMDAwMDAwIi8+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPC9zdmc+Cg==);
+    background-position: center;
+    background-size: contain;
+    margin: 1px 2px -1.7px 1px;
+    background-repeat: no-repeat;
+}
+
+.fa-close-custom {
+    width: 12px;
+    height: 12px;
+    background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDQ3Ljk3MSA0Ny45NzEiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDQ3Ljk3MSA0Ny45NzE7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4Ij4KPGc+Cgk8cGF0aCBkPSJNMjguMjI4LDIzLjk4Nkw0Ny4wOTIsNS4xMjJjMS4xNzItMS4xNzEsMS4xNzItMy4wNzEsMC00LjI0MmMtMS4xNzItMS4xNzItMy4wNy0xLjE3Mi00LjI0MiwwTDIzLjk4NiwxOS43NDRMNS4xMjEsMC44OCAgIGMtMS4xNzItMS4xNzItMy4wNy0xLjE3Mi00LjI0MiwwYy0xLjE3MiwxLjE3MS0xLjE3MiwzLjA3MSwwLDQuMjQybDE4Ljg2NSwxOC44NjRMMC44NzksNDIuODVjLTEuMTcyLDEuMTcxLTEuMTcyLDMuMDcxLDAsNC4yNDIgICBDMS40NjUsNDcuNjc3LDIuMjMzLDQ3Ljk3LDMsNDcuOTdzMS41MzUtMC4yOTMsMi4xMjEtMC44NzlsMTguODY1LTE4Ljg2NEw0Mi44NSw0Ny4wOTFjMC41ODYsMC41ODYsMS4zNTQsMC44NzksMi4xMjEsMC44NzkgICBzMS41MzUtMC4yOTMsMi4xMjEtMC44NzljMS4xNzItMS4xNzEsMS4xNzItMy4wNzEsMC00LjI0MkwyOC4yMjgsMjMuOTg2eiIgZmlsbD0iIzAwMDAwMCIvPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=);
+    background-position: center;
+    background-size: 50%;
+    margin: 1px 1px -1px 0px;
+    background-repeat: no-repeat;
+}
+
+.popover.numeric-filter {
+    margin-top: 3px!important;
+}
+
+.popover.numeric-filter .popover-body {
+    padding: 4px!important;
+}
+
+.popover.numeric-filter .arrow {
+    display: none!important;
+}
+
+.numeric-filter .popover {
+    width: calc(100%)!important;
+    top: 24px!important;
+    left: 0px!important;
+    transform: scaleY(1)!important;
+    transform-origin: top;
+    animation-name: popover-animation;
+    animation-duration: .2s;
+    border: 0px;
+    box-shadow: rgba(0, 0, 0, 0.1) 2px 2px 5px;
+    padding: 0!important;
+}
+
+.numeric-filter .popover-header {
+    background-color: #e4e5e6;
+    border-bottom: 1px solid #e4e5e6;
+}
+
+.date-filter .popover-header::before {
+    border: none!important;
+}
+
+@keyframes popover-animation {
+    from {
+        transform: scaleY(0)
+    }
+    to {
+        transform: scaleY(1)
+    }
+}

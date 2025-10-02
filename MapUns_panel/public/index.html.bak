@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang=en>
+
+<head>
+    <meta charset=utf-8>
+    <meta http-equiv=X-UA-Compatible content="IE=edge">
+    <meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+    <meta name=description content="{{DESCRIPCION}}">
+    <meta name=author content="{{AUTOR}}">
+    <meta name=version content="{{version}}">
+    <link rel="shortcut icon" href="img/favicon.png">
+    <title>{{NOMBRE}}</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsT1m6bBdumM-VbrP6kFWbtErVLpPgXQ8&libraries=visualization"></script>
+    <script>
+	    <!-- http://69.28.93.194:82/ | http://127.0.0.1:8000/ -->
+        var BASE_URL = http://69.28.93.194:82/";
+    </script>
+</head>
+
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
+    <div id=root></div>
+</body>
+
+</html>

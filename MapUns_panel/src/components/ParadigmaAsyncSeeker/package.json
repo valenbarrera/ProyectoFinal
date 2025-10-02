@@ -1,0 +1,6 @@
+{
+  "name": "ParadigmaAsyncSeeker",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./ParadigmaAsyncSeeker.js"
+}

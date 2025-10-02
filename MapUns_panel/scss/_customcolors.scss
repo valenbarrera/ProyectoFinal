@@ -1,0 +1,123 @@
+$CC1: #2b4464;
+$CC1B: #2b4464;
+$CC2: #e5ecef;
+$CC3: #ff0707;
+$FC1: #e4e4e4;
+$BC3: #dca500;
+$white: #fff;
+$black: #000 !default;
+.sidebar .nav-link {
+    border-left: 2px solid transparent !important;
+}
+
+.sidebar .nav-dropdown.open .nav-link {
+    border-left: 2px solid transparent !important;
+}
+
+.sidebar .nav-link.active,
+.sidebar .nav-dropdown.open .nav-link.active {
+    border-left: 2px solid $CC3 !important;
+}
+
+.author-brand a {
+    color: $white;
+}
+
+.colorback {
+    background-color: $white;
+}
+
+.-pagination {
+    background-color: $CC2;
+}
+
+.-pagination .-next {
+    background-color: $CC1;
+    color: $FC1;
+}
+
+.-pagination .-next .-btn {
+    color: $FC1;
+}
+
+.-pagination .-previous {
+    background-color: $CC1;
+    color: $FC1;
+}
+
+.-pagination .-previous .-btn {
+    color: $FC1;
+}
+
+.rt-resizable-header .-cursor-pointer {
+    background-color: $CC1;
+    color: $FC1;
+}
+
+.ReactTable .rt-thead .rt-th.-cursor-pointer,
+.ReactTable .rt-thead .rt-td.-cursor-pointer {
+    background-color: $CC1;
+    color: $FC1;
+}
+
+.ReactTable .rt-thead .rt-th.-cursor-pointer,
+.ReactTable .rt-thead .rt-td.-cursor-pointer {
+    color: $FC1;
+}
+
+.ReactTable .rt-thead.-filters input,
+.ReactTable .rt-thead.-filters select {
+    background-color: $FC1;
+}
+
+.rt-button-header {
+    background-color: $FC1;
+}
+
+.sidebar {
+    background-color: $CC1;
+}
+
+.ReactTable.-striped.-highlight {
+    background: $FC1;
+}
+
+.rt-thead .btn.btn-secondary:not(.btn-warning, .btn-danger) {
+    background-color: $CC1;
+    border-color: $CC1;
+    color: $white;
+}
+
+.rt-thead .btn.btn-secondary:not(.btn-warning, .btn-danger):hover {
+    color: $white;
+    background-color: $CC1B;
+    border-color: $CC1B;
+}
+
+.app.flex-row.align-items-center h1 {
+    font-size: 35px;
+    width: fit-content;
+    margin: auto;
+    small {
+        font-size: 10px;
+        vertical-align: text-top;
+        float: right;
+    }
+}
+
+.form-top-right {
+    color: $white;
+}
+
+.text-black.text-muted {
+    color: $black;
+}
+
+.custom-switch.switch-success>.switch-label {
+    background: $CC3 !important;
+    border-color: $BC3;
+}
+
+.sidebar .nav-dropdown-toggle::before {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 14'%3E%3Cpath fill='%23fff' d='M9.148 2.352l-4.148 4.148 4.148 4.148q0.148 0.148 0.148 0.352t-0.148 0.352l-1.297 1.297q-0.148 0.148-0.352 0.148t-0.352-0.148l-5.797-5.797q-0.148-0.148-0.148-0.352t0.148-0.352l5.797-5.797q0.148-0.148 0.352-0.148t0.352 0.148l1.297 1.297q0.148 0.148 0.148 0.352t-0.148 0.352z'/%3E%3C/svg%3E");
+}
