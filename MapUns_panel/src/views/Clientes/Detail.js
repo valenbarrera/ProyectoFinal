@@ -35,7 +35,7 @@ class Detail extends Component {
                 onSubmit={(e) => this.props.onSubmit(e)}
                 id={this.props.id}
                 missingIdMessage={"Debe seleccionar una fila."}
-                title={"Cliente"}
+                title={"Alumno"}
                 buttonTitle={"Ver"}
                 buttonIcon={"fa fa-search fa-lg"}
                 saveButton={false}

@@ -28,11 +28,7 @@ INSTALLED_APPS = [
     'users',
     'main',
     'Locaciones',
-    'Clientes',
-    'Vendedores',
-    'Transportes',
-    'Depositos',
-    'DatosGenerales',
+    'Alumnos',
 ]
 
 
@@ -86,7 +82,7 @@ DATABASES = {
     # #DB EN POSTGRESQL
     'default': {
          'ENGINE': 'django.db.backends.postgresql_psycopg2',
-         'NAME': 'mapsur_new',
+         'NAME': 'mapauns',
          'USER': 'postgres',
          'PASSWORD': 'adm007bb',
          'HOST': 'localhost',

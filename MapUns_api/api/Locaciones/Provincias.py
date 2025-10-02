@@ -18,7 +18,7 @@ import json, math
 from utilities import list_utils, list_reports
 
 from .models import Provincias
-from Clientes.models import Clientes
+from Alumnos.models import Alumnos
 
 @api_view(['GET'])
 @authentication_classes((TokenAuthentication, BasicAuthentication))
@@ -32,11 +32,6 @@ def List(request):
 @authentication_classes((TokenAuthentication, BasicAuthentication))
 @permission_classes((IsAuthenticated,))
 def Select(request):
-    incluir_debaja = request.GET.get('incluir_debaja', 'false').lower() == 'true'
-
-    subq = Clientes.objects
-    if not incluir_debaja:
-        subq = subq.filter(debaja=False)
 
     subq = subq.filter(localidad__provincia_id=OuterRef('pk')).values('localidad__provincia_id').annotate(total=Count('pk'))
 

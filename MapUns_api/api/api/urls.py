@@ -11,12 +11,8 @@ router = routers.SimpleRouter()
 urlpatterns = [
     url(r'^', include('users.urls')),
     url(r'^', include('main.urls')),
-    url(r'^', include('Clientes.urls')),
+    url(r'^', include('Alumnos.urls')),
     url(r'^', include('Locaciones.urls')),
-    url(r'^', include("Vendedores.urls")),
-    url(r'^', include("Transportes.urls")),
-    url(r'^', include("DatosGenerales.urls")),
-    url(r'^', include("Depositos.urls")),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

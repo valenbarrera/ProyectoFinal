@@ -22,7 +22,6 @@ class Localidades(models.Model):
     provincia = models.ForeignKey(Provincias,null=False,blank=False)
     latitud = models.FloatField(default=0)
     longitud = models.FloatField(default=0)
-    debaja = models.BooleanField(default=False)
 
     def __str__(self):
         return self.nombre
