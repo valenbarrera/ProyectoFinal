@@ -1,6 +1,6 @@
-# Mapsur Panel
+# MAPUNS Panel
 
-Frontend panel for Mapsur built with Node 10.23.0 (npm 6).
+Frontend panel for MAPUNS built with Node 10.23.0 (npm 6).
 
 ## Requisitos
 
@@ -10,7 +10,7 @@ Frontend panel for Mapsur built with Node 10.23.0 (npm 6).
 ## Instalación
 
 ```bash
-cd mapsur_panel
+cd mapuns_panel
 npm ci   # o: npm install
 ```
 
