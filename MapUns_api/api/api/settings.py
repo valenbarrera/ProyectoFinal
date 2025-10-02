@@ -7,7 +7,8 @@ SECRET_KEY = 'klcyvu4opz%^3$z3yf+0@a2a%o6ivuw8%n&t$i_kx2=n8d))jz'
 
 DEBUG = True
 
-HOST_IP = '69.28.93.194:82'
+#HOST_IP = '69.28.93.194:82'
+HOST_IP = 'localhost'
 
 ALLOWED_HOSTS = [
     "69.28.93.194",

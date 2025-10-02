@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import ParadigmaModal from "../../../components/ParadigmaModal/ParadigmaModal.js"
+import UnsModal from "../../../components/UnsModal/UnsModal.js"
 import PermisosListSelect from "../Permisos/PermisosListSelect.js"
 import api from "../../../api";
 
@@ -28,7 +28,7 @@ class Permissions extends Component {
 
     render() {
         return (
-            <ParadigmaModal 
+            <UnsModal 
             getUrl={api.usuarios.usuarios.permisos} 
             postUrl={api.usuarios.usuarios.permisos} 
             onSubmit={(e) => this.props.onSubmit(e)}  
@@ -47,7 +47,7 @@ class Permissions extends Component {
                         <PermisosListSelect fieldName={"permisos"} checked={this.state.checked} />
                     </Col>
                 </Row>
-            </ParadigmaModal>
+            </UnsModal>
         );
     }
 }

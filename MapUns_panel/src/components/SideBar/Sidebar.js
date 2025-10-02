@@ -16,7 +16,6 @@ class Sidebar extends Component {
   }
 
   activeRoute(routeName, props) {
-    // return this.props.location.pathname.indexOf(routeName) > -1 ? 'nav-item nav-dropdown open' : 'nav-item nav-dropdown';
     return props.location.pathname.indexOf(routeName) > -1 ? 'nav-item nav-dropdown open' : 'nav-item nav-dropdown';
 
   }
@@ -31,10 +30,6 @@ class Sidebar extends Component {
   hideMobile() {
     document.body.classList.toggle('sidebar-mobile-show');
   }
-  // todo Sidebar nav secondLevel
-  // secondLevelActive(routeName) {
-  //   return this.props.location.pathname.indexOf(routeName) > -1 ? "nav nav-second-level collapse in" : "nav nav-second-level collapse";
-  // }
 
 
   render() {
@@ -43,7 +38,6 @@ class Sidebar extends Component {
     const activeRoute = this.activeRoute;
     const handleClick = this.handleClick;
 
-    // badge addon to NavItem
     const badge = (badge) => {
       if (badge) {
         const classes = classNames(badge.class);
@@ -51,19 +45,15 @@ class Sidebar extends Component {
       }
     };
 
-    // simple wrapper for nav-title item
     const wrapper = item => { return (item.wrapper && item.wrapper.element ? (React.createElement(item.wrapper.element, item.wrapper.attributes, item.name)) : item.name) };
 
-    // nav list section title
     const title = (title, key) => {
       const classes = classNames("nav-title", title.class);
       return (<li key={key} className={classes}>{wrapper(title)} </li>);
     };
 
-    // nav list divider
     const divider = (divider, key) => (<li key={key} className="divider"></li>);
 
-    // nav item with nav link
     const navItem = (item, key) => {
       const classes = classNames(item.class)
       const isExternal = (url) => {
@@ -90,7 +80,6 @@ class Sidebar extends Component {
         )
     };
 
-    // nav dropdown
     const navDropdown = (item, key) => {
       var list = navList(item.children);
       if (list.filter(x => x != "").length > 0)
@@ -105,14 +94,12 @@ class Sidebar extends Component {
         return ""
     };
 
-    // nav link
     const navLink = (item, idx) =>
       item.title ? title(item, idx) :
         item.divider ? divider(item, idx) :
           item.children ? navDropdown(item, idx)
             : navItem(item, idx);
 
-    // nav list
     const navList = (items) => {
       return items.map((item, index) => {
         if (item.permission == undefined)
@@ -124,7 +111,6 @@ class Sidebar extends Component {
       });
     };
 
-    // sidebar-nav root
     return (
       <div className="sidebar">
         <nav className="sidebar-nav">
@@ -133,7 +119,7 @@ class Sidebar extends Component {
           </Nav>
         </nav>
         <SidebarMinimizer />
-        <span className="author-brand mx-auto"><a href="http://paradigma.com.ar">Paradigma del Sur S.A.</a> &copy; {new Date().getFullYear()}</span>
+        <span className="author-brand mx-auto"><a href="http://https://www.uns.edu.ar/.com.ar">Universidad Nacional del Sur</a> &copy; {new Date().getFullYear()}</span>
       </div>
     )
   }

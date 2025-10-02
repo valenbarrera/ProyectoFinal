@@ -8,9 +8,9 @@ def Index(request):
     version = "1.02.00"
     return render(request,'index.html',{
         "version": version,
-        "AUTOR": "Paradigma S.A.",
-        "DESCRIPCION": "MAPSUR - MAPA DE CLIENTES DARSUR",
-        "NOMBRE": "MAPSUR",
+        "AUTOR": "Mateo NEgri, Valentina Barrera",
+        "DESCRIPCION": "MAPUNS - MAPA DE ALUMNOS UNS",
+        "NOMBRE": "MAPUNS",
         "BASE_URL": "http://" + HOST_IP + "/"
     })
 

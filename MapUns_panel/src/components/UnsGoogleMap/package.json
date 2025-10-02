@@ -1,0 +1,6 @@
+{
+  "name": "UnsGoogleMap",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./UnsGoogleMap.js"
+}

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ParadigmaModal from "../../../components/ParadigmaModal/ParadigmaModal.js"
+import UnsModal from "../../../components/UnsModal/UnsModal.js"
 import api from "../../../api";
 
-import ParadigmaAsyncSeeker from "../../../components/ParadigmaAsyncSeeker/ParadigmaAsyncSeeker.js"
-import ParadigmaLabeledInput from "../../../components/ParadigmaLabeledInput/ParadigmaLabeledInput.js"
+import UnsAsyncSeeker from "../../../components/UnsAsyncSeeker/UnsAsyncSeeker.js"
+import UnsLabeledInput from "../../../components/UnsLabeledInput/UnsLabeledInput.js"
 
 
 
@@ -23,7 +23,7 @@ class Create extends Component {
 
     render() {
         return (
-            <ParadigmaModal
+            <UnsModal
                 postUrl={api.usuarios.permisos.create}
                 onSubmit={(e) => this.props.onSubmit(e)}
                 successMessage={"El Permiso ha sido creado con éxito."}
@@ -33,12 +33,12 @@ class Create extends Component {
                 submit={(callback) => this.submit(callback)}
                 saveButton={true}
                 closeButton={true}>
-                <ParadigmaLabeledInput labelColumns={2} fieldColumns={10} label={"Nombre"} fieldName={"nombre"} />
-                <ParadigmaLabeledInput labelColumns={2} fieldColumns={10} label={"Padre"} inputComponent={
-                    <ParadigmaAsyncSeeker fieldName={"padre_id"} url={api.usuarios.permisos.select} />
+                <UnsLabeledInput labelColumns={2} fieldColumns={10} label={"Nombre"} fieldName={"nombre"} />
+                <UnsLabeledInput labelColumns={2} fieldColumns={10} label={"Padre"} inputComponent={
+                    <UnsAsyncSeeker fieldName={"padre_id"} url={api.usuarios.permisos.select} />
                 } />
-                <ParadigmaLabeledInput labelColumns={12} fieldColumns={12} label={"Descripcion"} type={"textarea"} rows={2} fieldName={"descripcion"} />
-            </ParadigmaModal>
+                <UnsLabeledInput labelColumns={12} fieldColumns={12} label={"Descripcion"} type={"textarea"} rows={2} fieldName={"descripcion"} />
+            </UnsModal>
         );
     }
 }

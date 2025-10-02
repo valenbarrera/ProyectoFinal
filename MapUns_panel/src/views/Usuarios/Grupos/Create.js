@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ParadigmaModal from "../../../components/ParadigmaModal/ParadigmaModal.js"
+import UnsModal from "../../../components/UnsModal/UnsModal.js"
 import api from "../../../api";
 
-import ParadigmaAsyncSeeker from "../../../components/ParadigmaAsyncSeeker/ParadigmaAsyncSeeker.js"
+import UnsAsyncSeeker from "../../../components/UnsAsyncSeeker/UnsAsyncSeeker.js"
 import PermisosListSelect from "../Permisos/PermisosListSelect.js"
-import ParadigmaLabeledInput from "../../../components/ParadigmaLabeledInput/ParadigmaLabeledInput.js"
+import UnsLabeledInput from "../../../components/UnsLabeledInput/UnsLabeledInput.js"
 
 
 import { Row, Col, Label, Input, InputGroup, FormFeedback } from 'reactstrap';
@@ -50,7 +50,7 @@ class Create extends Component {
 
     render() {
         return (
-            <ParadigmaModal
+            <UnsModal
                 postUrl={api.usuarios.grupos.create}
                 onSubmit={(e) => this.props.onSubmit(e)}
                 successMessage={"El Grupo ha sido creado con éxito."}
@@ -62,9 +62,9 @@ class Create extends Component {
                 closeButton={true}
                 onClose={() => this.ResetForm()}
             >
-                <ParadigmaLabeledInput labelColumns={2} fieldColumns={10} label={"Nombre"} fieldName={"nombre"} />
-                <ParadigmaLabeledInput labelColumns={2} fieldColumns={10} label={"Padre"} inputComponent={
-                    <ParadigmaAsyncSeeker
+                <UnsLabeledInput labelColumns={2} fieldColumns={10} label={"Nombre"} fieldName={"nombre"} />
+                <UnsLabeledInput labelColumns={2} fieldColumns={10} label={"Padre"} inputComponent={
+                    <UnsAsyncSeeker
                         value={this.state.padre_id}
                         onChange={(value) => this.groupChanged(value)}
                         fieldName={"padre_id"}
@@ -82,7 +82,7 @@ class Create extends Component {
                         />
                     </Col>
                 </Row>
-            </ParadigmaModal>
+            </UnsModal>
         );
     }
 }

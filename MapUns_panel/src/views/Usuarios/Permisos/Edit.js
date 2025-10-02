@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ParadigmaModal from "../../../components/ParadigmaModal/ParadigmaModal.js"
+import UnsModal from "../../../components/UnsModal/UnsModal.js"
 import api from "../../../api";
 
 import { Row, Col, Label, Input, InputGroup, FormFeedback } from 'reactstrap';
 
-import ParadigmaAsyncSeeker from "../../../components/ParadigmaAsyncSeeker/ParadigmaAsyncSeeker.js"
-import ParadigmaLabeledInput from "../../../components/ParadigmaLabeledInput/ParadigmaLabeledInput.js"
+import UnsAsyncSeeker from "../../../components/UnsAsyncSeeker/UnsAsyncSeeker.js"
+import UnsLabeledInput from "../../../components/UnsLabeledInput/UnsLabeledInput.js"
 
 class Edit extends Component {
     constructor(props) {
@@ -35,7 +35,7 @@ class Edit extends Component {
     }
     render() {
         return (
-            <ParadigmaModal
+            <UnsModal
                 getUrl={api.usuarios.permisos.edit}
                 postUrl={api.usuarios.permisos.edit}
                 onSubmit={(e) => this.props.onSubmit(e)}
@@ -50,12 +50,12 @@ class Edit extends Component {
                 closeButton={true}
                 onClose={() => this.resetForm()}
                 onGotData={(data) => this.setSelects(data)}>
-                <ParadigmaLabeledInput labelColumns={2} fieldColumns={10} label={"Nombre"} fieldName={"nombre"} />
-                <ParadigmaLabeledInput labelColumns={2} fieldColumns={10} label={"Padre"} inputComponent={
-                    <ParadigmaAsyncSeeker fieldName={"padre_id"} url={api.usuarios.permisos.select} value={this.state.padre_id} />
+                <UnsLabeledInput labelColumns={2} fieldColumns={10} label={"Nombre"} fieldName={"nombre"} />
+                <UnsLabeledInput labelColumns={2} fieldColumns={10} label={"Padre"} inputComponent={
+                    <UnsAsyncSeeker fieldName={"padre_id"} url={api.usuarios.permisos.select} value={this.state.padre_id} />
                 } />
-                <ParadigmaLabeledInput labelColumns={12} fieldColumns={12} label={"Descripcion"} type={"textarea"} rows={2} fieldName={"descripcion"} />
-            </ParadigmaModal>
+                <UnsLabeledInput labelColumns={12} fieldColumns={12} label={"Descripcion"} type={"textarea"} rows={2} fieldName={"descripcion"} />
+            </UnsModal>
         );
     }
 }

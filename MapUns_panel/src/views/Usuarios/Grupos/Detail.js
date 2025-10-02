@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ParadigmaModal from "../../../components/ParadigmaModal/ParadigmaModal.js"
+import UnsModal from "../../../components/UnsModal/UnsModal.js"
 import api from "../../../api";
 
 import { Row, Col, Label, Input, InputGroup, FormFeedback } from 'reactstrap';
 
-import ParadigmaAsyncSeeker from "../../../components/ParadigmaAsyncSeeker/ParadigmaAsyncSeeker.js"
+import UnsAsyncSeeker from "../../../components/UnsAsyncSeeker/UnsAsyncSeeker.js"
 import PermisosListDetail from "../Permisos/PermisosListDetail.js"
-import ParadigmaLabeledInput from "../../../components/ParadigmaLabeledInput/ParadigmaLabeledInput.js"
+import UnsLabeledInput from "../../../components/UnsLabeledInput/UnsLabeledInput.js"
 
 var groupLoaded = false;
 class Detail extends Component {
@@ -75,7 +75,7 @@ class Detail extends Component {
 
     render() {
         return (
-            <ParadigmaModal
+            <UnsModal
                 getUrl={api.usuarios.grupos.detail}
                 onSubmit={(e) => this.props.onSubmit(e)}
                 id={this.props.id}
@@ -88,9 +88,9 @@ class Detail extends Component {
                 onGotData={(data) => this.setSelects(data)}
                 onClose={() => this.resetForm()}
             >
-                <ParadigmaLabeledInput disabled={true} labelColumns={2} fieldColumns={10} label={"Nombre"} fieldName={"nombre"} />
-                <ParadigmaLabeledInput disabled={true} labelColumns={2} fieldColumns={10} label={"Padre"} inputComponent={
-                    <ParadigmaAsyncSeeker
+                <UnsLabeledInput disabled={true} labelColumns={2} fieldColumns={10} label={"Nombre"} fieldName={"nombre"} />
+                <UnsLabeledInput disabled={true} labelColumns={2} fieldColumns={10} label={"Padre"} inputComponent={
+                    <UnsAsyncSeeker
                         disabled={true}
                         onExternalChange={(value) => this.groupLoaded(value)}
                         onChange={(value) => this.groupChanged(value)}
@@ -104,7 +104,7 @@ class Detail extends Component {
                         <PermisosListDetail fieldName={"permisos"} disabledNodes={this.state.permisos_disabled} onChange={(value) => this.setState({ permisos_checked: value })} checked={this.state.permisos_checked} />
                     </Col>
                 </Row>
-            </ParadigmaModal>
+            </UnsModal>
         );
     }
 }

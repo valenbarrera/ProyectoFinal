@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ParadigmaModal from "../../../components/ParadigmaModal/ParadigmaModal.js"
+import UnsModal from "../../../components/UnsModal/UnsModal.js"
 import api from "../../../api";
 
 import { Row, Col, Label, Input, InputGroup, FormFeedback } from 'reactstrap';
 
-import ParadigmaAsyncSeeker from "../../../components/ParadigmaAsyncSeeker/ParadigmaAsyncSeeker.js"
-import ParadigmaLabeledInput from "../../../components/ParadigmaLabeledInput"
+import UnsAsyncSeeker from "../../../components/UnsAsyncSeeker/UnsAsyncSeeker.js"
+import UnsLabeledInput from "../../../components/UnsLabeledInput"
 
 class Delete extends Component {
     constructor(props) {
@@ -35,7 +35,7 @@ class Delete extends Component {
 
     render() {
         return (
-            <ParadigmaModal
+            <UnsModal
                 getUrl={api.locaciones.localidades.delete}
                 postUrl={api.locaciones.localidades.delete}
                 onSubmit={(e) => this.props.onSubmit(e)}
@@ -53,10 +53,10 @@ class Delete extends Component {
                 onGotData={(data) => this.setSelects(data)}
                 onClose={() => this.resetForm()}
             >
-                <ParadigmaLabeledInput disabled={true} label={"Nombre"} fieldName={"nombre"} labelColumns={2} fieldColumns={10} />
-                <ParadigmaLabeledInput disabled={true} label={"Código Postal"} fieldName={"cp"} labelColumns={2} fieldColumns={10} />
-                <ParadigmaLabeledInput label={"Provincia"} labelColumns={2} fieldColumns={10}
-                    inputComponent={<ParadigmaAsyncSeeker
+                <UnsLabeledInput disabled={true} label={"Nombre"} fieldName={"nombre"} labelColumns={2} fieldColumns={10} />
+                <UnsLabeledInput disabled={true} label={"Código Postal"} fieldName={"cp"} labelColumns={2} fieldColumns={10} />
+                <UnsLabeledInput label={"Provincia"} labelColumns={2} fieldColumns={10}
+                    inputComponent={<UnsAsyncSeeker
                         clearable={false}
                         disabled={true}
                         url={api.locaciones.provincias.select}
@@ -64,7 +64,7 @@ class Delete extends Component {
                         value={this.state.provincia_id}
                         onChange={(data) => this.setState({provincia_id:data.pk})}
                     />} />
-            </ParadigmaModal>
+            </UnsModal>
         );
     }
 }

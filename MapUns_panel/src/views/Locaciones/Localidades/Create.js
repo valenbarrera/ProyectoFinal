@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ParadigmaModal from "../../../components/ParadigmaModal/ParadigmaModal.js"
+import UnsModal from "../../../components/UnsModal/UnsModal.js"
 import api from "../../../api";
 
-import ParadigmaAsyncSeeker from "../../../components/ParadigmaAsyncSeeker"
-import ParadigmaLabeledInput from "../../../components/ParadigmaLabeledInput"
+import UnsAsyncSeeker from "../../../components/UnsAsyncSeeker"
+import UnsLabeledInput from "../../../components/UnsLabeledInput"
 
 import { Row, Col, Label, Input, InputGroup, FormFeedback } from 'reactstrap';
 
@@ -28,7 +28,7 @@ class Create extends Component {
 
     render() {
         return (
-            <ParadigmaModal
+            <UnsModal
                 postUrl={api.locaciones.localidades.create}
                 onSubmit={(e) => this.props.onSubmit(e)}
                 successMessage={"La Localidad ha sido creada con éxito."}
@@ -39,17 +39,17 @@ class Create extends Component {
                 closeButton={true}
                 onClose={() => this.resetForm()}
             >
-                <ParadigmaLabeledInput label={"Nombre"} fieldName={"nombre"} labelColumns={2} fieldColumns={10} />
-                <ParadigmaLabeledInput label={"Código Postal"} fieldName={"cp"} labelColumns={2} fieldColumns={10} />
-                <ParadigmaLabeledInput label={"Provincia"} labelColumns={2} fieldColumns={10}
-                    inputComponent={<ParadigmaAsyncSeeker
+                <UnsLabeledInput label={"Nombre"} fieldName={"nombre"} labelColumns={2} fieldColumns={10} />
+                <UnsLabeledInput label={"Código Postal"} fieldName={"cp"} labelColumns={2} fieldColumns={10} />
+                <UnsLabeledInput label={"Provincia"} labelColumns={2} fieldColumns={10}
+                    inputComponent={<UnsAsyncSeeker
                         clearable={false}
                         url={api.locaciones.provincias.select}
                         fieldName={"provincia_id"}
                         value={this.state.provincia_id}
                         onChange={(data) => this.setState({provincia_id:data.pk})}
                     />} />
-            </ParadigmaModal>
+            </UnsModal>
         );
     }
 }

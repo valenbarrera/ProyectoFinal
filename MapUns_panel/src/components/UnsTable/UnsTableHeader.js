@@ -9,7 +9,7 @@ var checkStyle = {
     margin: '0px',
 };
 
-class ParadigmaTableHeader extends Component {
+class UnsTableHeader extends Component {
     constructor(props) {
         super(props);
         this.toggle = this.toggle.bind(this);
@@ -355,4 +355,4 @@ class ParadigmaTableHeader extends Component {
     }
 };
 
-module.exports = ParadigmaTableHeader;
+module.exports = UnsTableHeader;

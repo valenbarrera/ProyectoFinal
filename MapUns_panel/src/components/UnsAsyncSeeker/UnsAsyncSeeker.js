@@ -9,7 +9,7 @@ import auth from "../../auth";
 import "./scss/default.scss";
 import "./custom.scss";
 
-class ParadigmaAsyncSeeker extends Component {
+class UnsAsyncSeeker extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -265,7 +265,7 @@ class ParadigmaAsyncSeeker extends Component {
                     onChange={this.onInputChange}
                     name={fieldName}
                     value={pk ? pk : ''}
-                    className="d-none paradigma-not-set"
+                    className="d-none uns-not-set"
                     type={multiselect ? 'text' : 'number'}
                 />
                 <div
@@ -320,4 +320,4 @@ class ParadigmaAsyncSeeker extends Component {
     }
 }
 
-export default ParadigmaAsyncSeeker;
+export default UnsAsyncSeeker;

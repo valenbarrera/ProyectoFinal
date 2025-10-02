@@ -2,23 +2,21 @@ import React, { Component } from 'react';
 import axios from "axios";
 import PropTypes from 'prop-types';
 
-import api from '../../api/';
 import auth from '../../auth/';
 
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 
-import "./ParadigmaTable.scss";
+import "./UnsTable.scss";
 
-import ParadigmaTableHeader from "./ParadigmaTableHeader.js"
+import UnsTableHeader from "./UnsTableHeader.js"
 import ColumnFilter from "../Filters/ColumnFilter";
 
 var filterTimeout = null;
 var columnsChangedTimeout = null;
 
-import { UncontrolledTooltip } from 'reactstrap';
 
-class NewParadigmaTable extends Component {
+class UnsTable extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -40,8 +38,7 @@ class NewParadigmaTable extends Component {
             },
             selectAll: false,
             modalStates: {},
-            debajaFilter: null, // null = Todos, false = Activos, true = De baja
-            // 👇 NUEVO: filtros persistentes, controlados por el componente
+            debajaFilter: null,
             persistedFilters: (this.props.outerFilter ? this.props.outerFilter : []),
         };
         this.fetchData = this.fetchData.bind(this);
@@ -62,22 +59,19 @@ class NewParadigmaTable extends Component {
         selectAll: PropTypes.bool,
     }
 
-    // Obtiene valores únicos de una columna, respetando filtros en cascada
     requestColumnValues(columnId, otherFilters = []) {
         var getUrl = this.props.apiUrl + "?data=";
         var exportObject = {
             columns: [columnId],
             table: {
-                pageSize: -1, // Obtener todos los registros
+                pageSize: -1,
                 page: 0,
                 sorted: [],
-                // Tomamos otros filtros desde el estado controlado
                 filtered: [...otherFilters],
             },
             distinct: true,
         };
 
-        // Aplicar filtro de debaja si corresponde
         if (this.state.debajaFilter !== null) {
             exportObject.table.filtered = exportObject.table.filtered.filter(f => f.id !== "debaja");
             exportObject.table.filtered.push({ id: "debaja", value: this.state.debajaFilter });
@@ -120,7 +114,6 @@ class NewParadigmaTable extends Component {
         let { selectedRow, debajaFilter } = this.state;
         var self = this;
 
-        // Guardamos el último state de la tabla (página, sort, etc.)
         self.setState({ tableState: state });
 
         if (filterTimeout != null) {
@@ -130,10 +123,8 @@ class NewParadigmaTable extends Component {
         filterTimeout = setTimeout(function () {
             self.setState({ loading: true });
 
-            // 👉 SIEMPRE usar los filtros persistidos (controlados)
             let appliedFilters = [...(self.state.persistedFilters || [])];
 
-            // Agregar debaja si aplica (se maneja aparte de persistedFilters)
             if (debajaFilter !== null) {
                 appliedFilters = appliedFilters.filter(f => f.id !== "debaja");
                 appliedFilters.push({ id: "debaja", value: debajaFilter });
@@ -276,7 +267,6 @@ class NewParadigmaTable extends Component {
                 pageSize: this.state.defaultConfig.pageSize,
                 page: this.state.tableState ? this.state.tableState.page : 0,
                 sorted: this.state.tableState ? this.state.tableState.sorted : [],
-                // 👇 usar SIEMPRE los filtros persistidos
                 filtered: this.state.persistedFilters || [],
             },
             format: format,
@@ -321,20 +311,17 @@ class NewParadigmaTable extends Component {
         }));
     }
 
-    // ✅ Ahora los filtros actuales salen de persistedFilters
     getCurrentFilters = (columnId) => {
         const persisted = this.state.persistedFilters || [];
         const existing = persisted.find(f => f.id === columnId);
         return existing ? (Array.isArray(existing.value) ? existing.value : []) : [];
     }
 
-    // ✅ Otros filtros = persistedFilters sin la columna actual
     getOtherFilters = (excludeColumnId) => {
         const persisted = this.state.persistedFilters || [];
         return persisted.filter(f => f.id !== excludeColumnId);
     }
 
-    // ✅ Al aplicar, actualizamos persistedFilters (controlado) y recargamos
     applyColumnFilter = (columnId, values) => {
         const prev = this.state.persistedFilters || [];
         const without = prev.filter(f => f.id !== columnId);
@@ -342,14 +329,12 @@ class NewParadigmaTable extends Component {
             ? [...without, { id: columnId, value: values }]
             : without;
 
-        // Guardamos y disparamos fetch con los nuevos filtros
         this.setState({ persistedFilters: next }, () => {
             const nextState = { ...(this.state.tableState || {}), filtered: next };
             this.fetchData(nextState);
         });
     }
 
-    // ✅ Borrar filtro también toca persistedFilters
     clearColumnFilter = (columnId) => {
         const prev = this.state.persistedFilters || [];
         const next = prev.filter(f => f.id !== columnId);
@@ -403,7 +388,6 @@ class NewParadigmaTable extends Component {
             }
         }
         
-        //checkbox para seleccionar todo
         let checkSelectAll = [{
             id: "checkbox",
             Header: <input
@@ -418,7 +402,6 @@ class NewParadigmaTable extends Component {
             show: true,
         }]
 
-        // Columnas con filtros modal - ACTUALIZADO CON FILTRADO EN CASCADA
         const columnasConFiltro = this.state.tableColumns.map(col => {
             const currentFilters = this.getCurrentFilters(col.accessor);
             const isModalOpen = this.state.modalStates && this.state.modalStates[col.accessor];
@@ -451,7 +434,7 @@ class NewParadigmaTable extends Component {
         return (
             <div>
                 <div className="rt-thead -header mt-1 rt-button-header">
-                    <ParadigmaTableHeader
+                    <UnsTableHeader
                         title={this.props.title}
                         resizedColumns={this.state.resizedColumns}
                         listColumns={this.state.columns}
@@ -501,10 +484,8 @@ class NewParadigmaTable extends Component {
                     loading={loading}
                     onFetchData={this.fetchData}
                     filterable
-                    // 👇 CONTROLAMOS los filtros desde el estado (no se pierden al paginar)
                     filtered={this.state.persistedFilters}
                     onFilteredChange={(newFiltered) => {
-                        // si llegaran cambios desde inputs nativos de ReactTable, sincronizamos igual
                         this.setState({ persistedFilters: newFiltered }, () => this.updateTable());
                     }}
                     defaultPageSize={this.state.defaultConfig.pageSize}
@@ -524,4 +505,4 @@ class NewParadigmaTable extends Component {
     }
 }
 
-export default NewParadigmaTable;
+export default UnsTable;

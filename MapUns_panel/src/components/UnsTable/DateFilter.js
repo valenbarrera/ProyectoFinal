@@ -1,7 +1,7 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Popover, PopoverHeader, PopoverBody } from 'reactstrap';
-import ParadigmaDatePicker from '../../components/ParadigmaDatePicker/ParadigmaDatePicker';
+import UnsDatePicker from '../../components/UnsDatePicker/UnsDatePicker';
 import moment from 'moment';
 
 import './DateFilter.css';
@@ -64,7 +64,6 @@ class DateFilter extends Component {
             .toString(16)
             .substring(1);
         }
-        // return 'tooltip-' + s4() + s4();
         return `${prefix}-${s4()+s4()}`;
     }
 
@@ -93,7 +92,7 @@ class DateFilter extends Component {
 
         return (
             <div className={'date-filter' + (!!this.state.date && moment(this.state.date).isValid() ? ' has-value' : '' ) + ' ' + this.container}>
-                <ParadigmaDatePicker
+                <UnsDatePicker
                     value={this.state.date}
                     onChange={this.handleDateChange}
                 />

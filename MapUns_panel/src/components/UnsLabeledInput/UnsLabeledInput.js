@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import { Input, Row, Col, FormFeedback, Label } from 'reactstrap';
 
-import './ParadigmaLabeledInput.scss';
+import './UnsLabeledInput.scss';
 
-class ParadigmaLabeledInput extends Component {
+class UnsLabeledInput extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -53,4 +53,4 @@ class ParadigmaLabeledInput extends Component {
 	}
 };
 
-module.exports = ParadigmaLabeledInput;
+module.exports = UnsLabeledInput;

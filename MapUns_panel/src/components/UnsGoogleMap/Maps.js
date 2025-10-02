@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
-import { Input, Row, Col, FormFeedback, Label } from 'reactstrap';
-
-import { withScriptjs, withGoogleMap, InfoWindow, GoogleMap, FusionTablesLayer, TrafficLayer, Marker, DirectionsRenderer, Icon } from "react-google-maps"
-import HeatmapLayer from "react-google-maps/lib/components/visualization/HeatmapLayer";
+import { InfoWindow, GoogleMap, Marker } from "react-google-maps"
 
 class Maps extends Component {
 	constructor(props) {
@@ -105,14 +101,7 @@ class Maps extends Component {
 
 			centerLat = (maxLat - minLat) / 2 + minLat;
 			centerLng = (maxLng - minLng) / 2 + minLng;
-
-			/*if (center) {
-				centerLat = center.lat;
-				centerLng = center.lng;
-				Zoom = 13;
-			}*/
-
-			//esto lo genere haciendo una regresión, sacando distancias entre markers y el zoom que necesitaba para verlo
+			
 			if (Zoom > 17) Zoom = 17;
 			return {
 				zoom: Zoom,

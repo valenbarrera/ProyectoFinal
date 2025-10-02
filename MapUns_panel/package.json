@@ -1,11 +1,7 @@
 {
-  "name": "@PDS/MAPSUR",
+  "name": "MAPUNS",
   "version": "1.0.0",
-  "description": "MAPSUR - MAPA DE CLIENTES DARSUR",
-  "author": "Paradigma del Sur S.A.",
-  "responsable": "Juan Cruz Fortunatti",
-  "homepage": "http://www.paradigma.com.ar",
-  "copyright": "Copyright 2018 Paradigma del Sur S.A.",
+  "author": "Mateo Negri, Valentina Barrera.",
   "private": true,
   "devDependencies": {
     "babel-core": "^6.26.0",

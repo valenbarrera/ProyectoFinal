@@ -64,8 +64,8 @@ class Login extends Component {
               </CardGroup>
 
               <footer>
-                <a href="http://www.paradigma.com.ar/" className="logoParadigma"></a>
-                <h6>{new Date().getFullYear()} © Paradigma del Sur S.A. Todos los derechos reservados.</h6></footer>
+                <a href="https://www.uns.edu.ar/" className="logoParadigma"></a>
+                <h6>{new Date().getFullYear()} Universidad Nacional del Sur</h6></footer>
             </Col>
           </Row>
         </Container>

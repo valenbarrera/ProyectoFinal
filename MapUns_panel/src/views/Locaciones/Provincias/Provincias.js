@@ -8,7 +8,7 @@ import Edit from "./Edit.js"
 import Delete from "./Delete.js"
 import Detail from "./Detail.js"
 
-import ParadigmaTable from "../../../components/ParadigmaTable/ParadigmaTable.js"
+import UnsTable from "../../../components/UnsTable/UnsTable.js"
 
 
 class Provincias extends Component {
@@ -37,7 +37,7 @@ class Provincias extends Component {
     render() {
         const { data, pages, loading } = this.state;
         return (
-            <ParadigmaTable
+            <UnsTable
                 buttons={[
                     {
                         create: true,

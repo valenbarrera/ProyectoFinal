@@ -5,7 +5,7 @@ import api from '../../api/';
 
 import Detail from "./Detail.js"
 
-import ParadigmaTable from "../../components/ParadigmaTable/ParadigmaTable.js"
+import UnsTable from "../../components/UnsTable/UnsTable.js"
 
 
 class Ejemplo extends Component {
@@ -62,7 +62,7 @@ class Ejemplo extends Component {
     render() {
         const { data, pages, loading } = this.state;
         return (
-            <ParadigmaTable
+            <UnsTable
                 buttons={[
                     {
                         detail: true,

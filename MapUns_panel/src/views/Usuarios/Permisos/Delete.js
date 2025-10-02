@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ParadigmaModal from "../../../components/ParadigmaModal/ParadigmaModal.js"
+import UnsModal from "../../../components/UnsModal/UnsModal.js"
 import api from "../../../api";
 
 import { Row, Col, Label, Input, InputGroup, FormFeedback } from 'reactstrap';
 
-import ParadigmaAsyncSeeker from "../../../components/ParadigmaAsyncSeeker/ParadigmaAsyncSeeker.js"
-import ParadigmaLabeledInput from "../../../components/ParadigmaLabeledInput/ParadigmaLabeledInput.js"
+import UnsAsyncSeeker from "../../../components/UnsAsyncSeeker/UnsAsyncSeeker.js"
+import UnsLabeledInput from "../../../components/UnsLabeledInput/UnsLabeledInput.js"
 
 class Delete extends Component {
     constructor(props) {
@@ -36,7 +36,7 @@ class Delete extends Component {
 
     render() {
         return (
-            <ParadigmaModal
+            <UnsModal
                 getUrl={api.usuarios.permisos.delete}
                 postUrl={api.usuarios.permisos.delete}
                 onSubmit={(e) => this.props.onSubmit(e)}
@@ -55,13 +55,13 @@ class Delete extends Component {
                 saveButtonLabel={"Eliminar"}
                 onClose={() => this.resetForm()}
                 onGotData={(data) => this.setSelects(data)}>
-                <ParadigmaLabeledInput disabled={true} labelColumns={2} fieldColumns={10} label={"Nombre"} fieldName={"nombre"} />
-                <ParadigmaLabeledInput labelColumns={2} fieldColumns={10} label={"Padre"} inputComponent={
-                    <ParadigmaAsyncSeeker disabled={true} fieldName={"padre_id"} url={api.usuarios.permisos.select} value={this.state.padre_id} />
+                <UnsLabeledInput disabled={true} labelColumns={2} fieldColumns={10} label={"Nombre"} fieldName={"nombre"} />
+                <UnsLabeledInput labelColumns={2} fieldColumns={10} label={"Padre"} inputComponent={
+                    <UnsAsyncSeeker disabled={true} fieldName={"padre_id"} url={api.usuarios.permisos.select} value={this.state.padre_id} />
                 } />
-                <ParadigmaLabeledInput disabled={true} labelColumns={12} fieldColumns={12} label={"Descripcion"} type={"textarea"} rows={2} fieldName={"descripcion"} />
+                <UnsLabeledInput disabled={true} labelColumns={12} fieldColumns={12} label={"Descripcion"} type={"textarea"} rows={2} fieldName={"descripcion"} />
                 
-            </ParadigmaModal>
+            </UnsModal>
         );
     }
 }

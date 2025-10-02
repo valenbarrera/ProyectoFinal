@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ParadigmaModal from "../../components/ParadigmaModal/ParadigmaModal.js"
+import UnsModal from "../../components/UnsModal/UnsModal.js"
 import api from "../../api";
 
 import { Row, Col, Label, Input, InputGroup, FormFeedback } from 'reactstrap';
 
-import ParadigmaAsyncSeeker from "../../components/ParadigmaAsyncSeeker/ParadigmaAsyncSeeker.js"
-import ParadigmaLabeledInput from "../../components/ParadigmaLabeledInput"
+import UnsAsyncSeeker from "../../components/UnsAsyncSeeker/UnsAsyncSeeker.js"
+import UnsLabeledInput from "../../components/UnsLabeledInput"
 
 class Detail extends Component {
     constructor(props) {
@@ -30,7 +30,7 @@ class Detail extends Component {
 
     render() {
         return (
-            <ParadigmaModal
+            <UnsModal
                 getUrl={api.clientes.detail}
                 onSubmit={(e) => this.props.onSubmit(e)}
                 id={this.props.id}
@@ -43,9 +43,9 @@ class Detail extends Component {
                 onGotData={(data) => this.setSelects(data)}
                 onClose={() => this.resetForm()}
             >
-                <ParadigmaLabeledInput disabled={true} label={"Nombre"} fieldName={"nombre"} labelColumns={2} fieldColumns={10} />
+                <UnsLabeledInput disabled={true} label={"Nombre"} fieldName={"nombre"} labelColumns={2} fieldColumns={10} />
 
-            </ParadigmaModal>
+            </UnsModal>
         );
     }
 }

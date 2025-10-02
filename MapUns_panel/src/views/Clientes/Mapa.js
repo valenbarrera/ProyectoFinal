@@ -5,10 +5,10 @@ import api from '../../api/';
 import auth from '../../auth/';
 
 import { Input, Row, Col, FormFeedback, Label, Card, CardHeader, CardBody, CardColumns, CardBlock } from 'reactstrap';
-import ParadigmaTable from "../../components/ParadigmaTable/"
-import ParadigmaAsyncSeeker from "../../components/ParadigmaAsyncSeeker/ParadigmaAsyncSeeker.js"
-import ParadigmaLabeledInput from "../../components/ParadigmaLabeledInput/ParadigmaLabeledInput.js"
-import ParadigmaGoogleMap from "../../components/ParadigmaGoogleMap/ParadigmaGoogleMap.js"
+import UnsTable from "../../components/UnsTable/"
+import UnsAsyncSeeker from "../../components/UnsAsyncSeeker/UnsAsyncSeeker.js"
+import UnsLabeledInput from "../../components/UnsLabeledInput/UnsLabeledInput.js"
+import UnsGoogleMap from "../../components/UnsGoogleMap/UnsGoogleMap.js"
 import FiltersDropdown from "../../components/FiltersMap/FiltersDropdown.js"
 import RankingModal from "../../components/FiltersMap/RankingModal.js";
 
@@ -230,11 +230,11 @@ class Mapa extends Component {
             <div>
                 <Row className="">
                     <div className="col-5 col-md-3">
-                        <ParadigmaLabeledInput label={<span style={{ color: 'white' }}>Provincia</span>} labelColumns={3} fieldColumns={9} InputComponent={<ParadigmaAsyncSeeker onChange={(data) => this.onChangeProvincia(data)} fieldName={""} url={api.locaciones.provincias.select + "?incluir_debaja=" + this.state.incluirDebaja}
+                        <UnsLabeledInput label={<span style={{ color: 'white' }}>Provincia</span>} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker onChange={(data) => this.onChangeProvincia(data)} fieldName={""} url={api.locaciones.provincias.select + "?incluir_debaja=" + this.state.incluirDebaja}
                             nombreField={"nombre"} value={this.state.provincia_id} />} />
                     </div>
                     <div className="col-5 col-md-3">
-                        <ParadigmaLabeledInput label={<span style={{ color: 'white' }}>Localidad</span>} labelColumns={3} fieldColumns={9} InputComponent={<ParadigmaAsyncSeeker onChange={(data) => this.onChangeLocalidad(data)}
+                        <UnsLabeledInput label={<span style={{ color: 'white' }}>Localidad</span>} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker onChange={(data) => this.onChangeLocalidad(data)}
                             disabled={!this.state.provincia_id}
                             fieldName={""} url={api.locaciones.localidades.select + "?provincia_id=" + this.state.provincia_id + "&incluir_debaja=" + this.state.incluirDebaja}
                             nombreField={"nombre"} value={this.state.localidad_id} />} />
@@ -299,7 +299,7 @@ class Mapa extends Component {
                 />
 
                 <Row className="mt-1">
-                    <ParadigmaGoogleMap center={this.state.center} markers={markers} />
+                    <UnsGoogleMap center={this.state.center} markers={markers} />
                 </Row>
             </div>
         );

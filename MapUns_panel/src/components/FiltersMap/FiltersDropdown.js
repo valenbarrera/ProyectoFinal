@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Label, Row, Col, Input, Collapse, Card, CardBody } from 'reactstrap';
-import ParadigmaAsyncSeeker from "../ParadigmaAsyncSeeker/ParadigmaAsyncSeeker.js";
+import UnsAsyncSeeker from "../UnsAsyncSeeker/UnsAsyncSeeker.js";
 import api from "../../api/";
 
 const FiltersDropdown = ({
@@ -32,7 +32,7 @@ const FiltersDropdown = ({
             <Col md={2} className="mb-3">
               <Label style={{ color: 'white' }}>Vendedor</Label>
               <div>
-                <ParadigmaAsyncSeeker
+                <UnsAsyncSeeker
                   onChange={onVendedorChange}
                   fieldName={"codigo_vendedor"}
                   url={api.vendedores.select}
@@ -58,7 +58,7 @@ const FiltersDropdown = ({
             <Col md={2} className="mb-3">
               <Label style={{ color: 'white' }}>Transporte</Label>
               <div>
-                <ParadigmaAsyncSeeker
+                <UnsAsyncSeeker
                   onChange={onTransporteChange}
                   fieldName={"codigo_transporte"}
                   url={api.transportes.select}
@@ -84,7 +84,7 @@ const FiltersDropdown = ({
             <Col md={2} className="mb-3">
               <Label style={{ color: 'white' }}>Depósito</Label>
               <div>
-                <ParadigmaAsyncSeeker
+                <UnsAsyncSeeker
                   onChange={onDepositoChange}
                   fieldName={"deposito_id"}
                   url={api.depositos.select}
@@ -167,7 +167,7 @@ const FiltersDropdown = ({
             <Col md={4} className="mb-3">
               <Label style={{ color: 'white' }}>Línea de Producto</Label>
               <div>
-                <ParadigmaAsyncSeeker
+                <UnsAsyncSeeker
                   onChange={onLineaProductoChange}
                   fieldName={"linea_id"}
                   url={api.lineasProductos.select}

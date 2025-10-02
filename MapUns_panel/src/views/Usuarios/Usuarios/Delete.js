@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ParadigmaModal from "../../../components/ParadigmaModal/ParadigmaModal.js"
+import UnsModal from "../../../components/UnsModal/UnsModal.js"
 import api from "../../../api";
 
 import PermisosListDetail from "../Permisos/PermisosListDetail.js"
 
 
-import ParadigmaAsyncSeeker from "../../../components/ParadigmaAsyncSeeker/ParadigmaAsyncSeeker.js"
-import ParadigmaLabeledInput from "../../../components/ParadigmaLabeledInput/ParadigmaLabeledInput.js"
+import UnsAsyncSeeker from "../../../components/UnsAsyncSeeker/UnsAsyncSeeker.js"
+import UnsLabeledInput from "../../../components/UnsLabeledInput/UnsLabeledInput.js"
 
 
 
@@ -97,7 +97,7 @@ class Delete extends Component {
 
     render() {
         return (
-            <ParadigmaModal
+            <UnsModal
                 getUrl={api.usuarios.usuarios.delete}
                 postUrl={api.usuarios.usuarios.delete}
                 onSubmit={(e) => this.props.onSubmit(e)}
@@ -130,14 +130,14 @@ class Delete extends Component {
                 </Nav>
                 <TabContent style={TabHeaderBody} activeTab={this.state.activeTab} className={"py-2"}>
                     <TabPane tabId={1} className="py-0">
-                        <ParadigmaLabeledInput disabled={true} labelColumns={2} fieldColumns={10} label={"Apellido"} fieldName={"last_name"} />
-                        <ParadigmaLabeledInput disabled={true} labelColumns={2} fieldColumns={10} label={"Nombre"} fieldName={"first_name"} />
-                        <ParadigmaLabeledInput disabled={true} labelColumns={2} fieldColumns={10} label={"Usuario"} fieldName={"username"} />
-                        <ParadigmaLabeledInput disabled={true} labelColumns={2} fieldColumns={10} label={"Email"} fieldName={"email"} />
+                        <UnsLabeledInput disabled={true} labelColumns={2} fieldColumns={10} label={"Apellido"} fieldName={"last_name"} />
+                        <UnsLabeledInput disabled={true} labelColumns={2} fieldColumns={10} label={"Nombre"} fieldName={"first_name"} />
+                        <UnsLabeledInput disabled={true} labelColumns={2} fieldColumns={10} label={"Usuario"} fieldName={"username"} />
+                        <UnsLabeledInput disabled={true} labelColumns={2} fieldColumns={10} label={"Email"} fieldName={"email"} />
                     </TabPane>
                     <TabPane tabId={2} className="py-0">
-                        <ParadigmaLabeledInput labelColumns={2} fieldColumns={10} label={"Grupo"} inputComponent={
-                            <ParadigmaAsyncSeeker
+                        <UnsLabeledInput labelColumns={2} fieldColumns={10} label={"Grupo"} inputComponent={
+                            <UnsAsyncSeeker
                                 disabled={true}
                                 onExternalChange={(value) => this.groupLoaded(value)}
                                 onChange={(value) => this.groupChanged(value)}
@@ -154,7 +154,7 @@ class Delete extends Component {
                         </Row>
                     </TabPane>
                 </TabContent>
-            </ParadigmaModal>
+            </UnsModal>
         );
     }
 }

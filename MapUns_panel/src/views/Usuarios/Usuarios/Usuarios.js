@@ -10,7 +10,7 @@ import Detail from "./Detail.js"
 import Lock from "./Lock.js"
 import Unlock from "./Unlock.js"
 
-import ParadigmaTable from "../../../components/ParadigmaTable/"
+import UnsTable from "../../../components/UnsTable/"
 
 
 
@@ -63,7 +63,7 @@ class Usuarios extends Component {
 render() {
     const { data, pages, loading } = this.state;
     return (
-        <ParadigmaTable
+        <UnsTable
         buttons={[
             {
                 create:true,

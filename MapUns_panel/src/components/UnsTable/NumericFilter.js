@@ -1,13 +1,8 @@
-import React, { Component, Fragment } from 'react';
-import { Button, Popover, PopoverHeader, PopoverBody } from 'reactstrap';
+import React, { Component } from 'react';
+import { Popover, PopoverHeader, PopoverBody } from 'reactstrap';
 
 import './NumericFilter.css';
 
-/**
- * Para implentarse, en el array de columnas que se envía al componente ParadigmaTable,
- * en la propiedad Filter del objeto (que debe ser numérico) se pasa una función:
- * Filter: ({ filter, onChange }) => <NumericFilter filter={filter} onChange={onChange} />
- */
 class NumericFilter extends Component {
     constructor(props) {
         super(props);

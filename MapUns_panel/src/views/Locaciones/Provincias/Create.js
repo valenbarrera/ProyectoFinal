@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ParadigmaModal from "../../../components/ParadigmaModal/ParadigmaModal.js"
+import UnsModal from "../../../components/UnsModal/UnsModal.js"
 import api from "../../../api";
 
-import ParadigmaAsyncSeeker from "../../../components/ParadigmaAsyncSeeker"
-import ParadigmaLabeledInput from "../../../components/ParadigmaLabeledInput"
+import UnsAsyncSeeker from "../../../components/UnsAsyncSeeker"
+import UnsLabeledInput from "../../../components/UnsLabeledInput"
 
 import { Row, Col, Label, Input, InputGroup, FormFeedback } from 'reactstrap';
 
@@ -26,7 +26,7 @@ class Create extends Component {
 
     render() {
         return (
-            <ParadigmaModal
+            <UnsModal
                 postUrl={api.locaciones.provincias.create}
                 onSubmit={(e) => this.props.onSubmit(e)}
                 successMessage={"La Provincia ha sido creada con éxito."}
@@ -37,8 +37,8 @@ class Create extends Component {
                 closeButton={true}
                 onClose={() => this.resetForm()}
             >
-                <ParadigmaLabeledInput label={"Nombre"} fieldName={"nombre"} labelColumns={2} fieldColumns={10} />
-            </ParadigmaModal>
+                <UnsLabeledInput label={"Nombre"} fieldName={"nombre"} labelColumns={2} fieldColumns={10} />
+            </UnsModal>
         );
     }
 }

@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
-import api from "../../api";
 import auth from "../../auth";
 import serialize from 'form-serialize';
 
-import { NavItem, NavLink, Row, UncontrolledTooltip, Tooltip, Label, FormFeedback, Col, Button, Input, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody } from 'reactstrap';
+import { Tooltip, Label, Button, Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import jsonToFormData from 'json-form-data';
 
 import Loader from '../Loader'
-import "./ParadigmaModal.scss";
+import "./UnsModal.scss";
 
-class ParadigmaModal extends Component {
+class UnsModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -26,8 +25,6 @@ class ParadigmaModal extends Component {
             id: this.NewID(),
             backdrop: (!this.props.hideBackdrop ? true : false),
             keyboard: (this.props.keyboard ? true : false),
-
-            // Propiedad para permitir cerrar el modal haciendo click fuera de la modal. En caso de que no haya postUrl se permitira de todos modos. (Ventanas de detalle)
             backdropToggle: (this.props.backdropToggle ? true : (!this.props.postUrl ? true : false)),
 
         };
@@ -279,7 +276,7 @@ class ParadigmaModal extends Component {
                         var inputs = self.form.querySelectorAll("input, select, textarea");
                         for (var i = 0; i < inputs.length; i++) {
 
-                            if (!inputs[i].classList.contains('paradigma-not-set') && inputs[i].type != "file")
+                            if (!inputs[i].classList.contains('uns-not-set') && inputs[i].type != "file")
                                 if (data[inputs[i].name] != undefined) {
                                     inputs[i].value = data[inputs[i].name];
                                 }
@@ -303,7 +300,7 @@ class ParadigmaModal extends Component {
     cleanForm() {
         var inputs = this.form.querySelectorAll("input, select, textarea");
         for (var i = 0; i < inputs.length; i++) {
-            if (!inputs[i].classList.contains('paradigma-not-set'))
+            if (!inputs[i].classList.contains('uns-not-set'))
                 inputs[i].value = "";
         }
         this.setState({
@@ -323,7 +320,6 @@ class ParadigmaModal extends Component {
         var inputs = this.form.querySelectorAll("input.form-control, textarea.form-control, .react-checkbox-tree > input");
         var postData;
 
-        // if (this.props.onValidation) if (!this.props.onValidation()) return;
         if (this.props.onValidation) if (!this.props.onValidation()) {
             let data = { success: false };
             if (callback) callback(data);
@@ -333,7 +329,6 @@ class ParadigmaModal extends Component {
         if (this.props.fileUploader) postData = new FormData(this.form);
         else postData = serialize(this.form, { hash: true, empty: true });
 
-        // if (self.props.onPreSubmit) postData = JSON.stringify(self.props.onPreSubmit());
         if (self.props.onPreSubmit) postData = self.props.onPreSubmit();
 
         if ((self.props.onPreSubmit) && (this.props.fileUploader)) {
@@ -563,4 +558,4 @@ class ParadigmaModal extends Component {
     }
 }
 
-export default ParadigmaModal;
+export default UnsModal;
