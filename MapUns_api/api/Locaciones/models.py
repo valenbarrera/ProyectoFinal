@@ -2,7 +2,6 @@ from django.db import models
 
 class Provincias(models.Model):
     nombre = models.CharField(max_length=30,null=False,blank=False, unique=True)
-    debaja = models.BooleanField(default=False)
     latitud = models.FloatField(default=0)
     longitud = models.FloatField(default=0)
     
