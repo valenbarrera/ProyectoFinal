@@ -7,15 +7,15 @@ module.exports = {
 	dashboard: {
 		stats: BASE_URL + "dashboard/",
 	},
-    clientes: {
-        maplist: BASE_URL + "clientes/maplist/",
-        list: BASE_URL + "clientes/list/",
-        select: BASE_URL + "clientes/select/",
-        create: BASE_URL + "clientes/create/",
-        edit: BASE_URL + "clientes/edit/",
-        detail: BASE_URL + "clientes/detail/",
-        delete: BASE_URL + "clientes/delete/",
-        export: BASE_URL + "clientes/export/",
+    alumnos: {
+        maplist: BASE_URL + "alumnos/maplist/",
+        list: BASE_URL + "alumnos/list/",
+        select: BASE_URL + "alumnos/select/",
+        create: BASE_URL + "alumnos/create/",
+        edit: BASE_URL + "alumnos/edit/",
+        detail: BASE_URL + "alumnos/detail/",
+        delete: BASE_URL + "alumnos/delete/",
+        export: BASE_URL + "alumnos/export/",
     },
     usuarios: {
         usuarios: {
@@ -69,21 +69,5 @@ module.exports = {
             delete: BASE_URL + "localidades/delete/",
             export: BASE_URL + "localidades/export/",
         }
-    },
-    vendedores: {
-        list: BASE_URL + "vendedores/list/",
-        select: BASE_URL + "vendedores/select/",
-    },
-    transportes: {
-        list: BASE_URL + "transportes/list/",
-        select: BASE_URL + "transportes/select/",
-    },
-    depositos: {
-        list: BASE_URL + "depositos/list/",
-        select: BASE_URL + "depositos/select/",
-    },
-    lineasProductos: {
-        list: BASE_URL + "lineasproductos/list/",
-        select: BASE_URL + "lineasproductos/select/",
     },
 }

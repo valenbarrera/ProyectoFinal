@@ -70,10 +70,10 @@ class Ejemplo extends Component {
                         permission: 'ejemplo_detail',
                     },
                 ]}
-                apiUrl={api.clientes.list}
+                apiUrl={api.alumnos.list}
                 columns={this.state.columns}
-                exportUrl={api.clientes.export}
-                title={"Clientes"}
+                exportUrl={api.alumnos.export}
+                title={"Alumnos"}
                 filters={this.state.filters}
                 onFilterChange={(newFilters) => this.setState({ filters: newFilters })} 
             />
