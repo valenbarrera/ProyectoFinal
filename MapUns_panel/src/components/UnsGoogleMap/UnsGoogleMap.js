@@ -29,7 +29,7 @@ class UnsGoogleMap extends Component {
     render() {
         return (
             <MapComponent
-                googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsT1m6bBdumM-VbrP6kFWbtErVLpPgXQ8&v=3.exp&libraries=geometry,drawing,places"
+                googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsT1m6bBdumM-VbrP6kFWbtErVLpPgXQ8&v=3.exp&libraries=geometry,drawing,places,visualization"
                 loadingElement={
                     <div style={{ height: `100%`, width: "100%" }} />
                 }
