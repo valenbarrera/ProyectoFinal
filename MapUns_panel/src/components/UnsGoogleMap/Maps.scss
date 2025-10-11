@@ -1,0 +1,38 @@
+$cluster-color-small: #007bff; 
+$cluster-color-medium: #28a745; 
+$cluster-color-large: #dc3545; 
+
+.custom-cluster-icon {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  border: 2px solid white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.custom-cluster-small {
+  background-color: $cluster-color-small;
+  width: 40px;
+  height: 40px;
+}
+
+.custom-cluster-medium {
+  background-color: $cluster-color-medium;
+  width: 45px;
+  height: 45px;
+}
+
+.custom-cluster-large {
+  background-color: $cluster-color-large;
+  width: 50px;
+  height: 50px;
+}

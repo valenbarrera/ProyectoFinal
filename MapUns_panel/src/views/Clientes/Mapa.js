@@ -8,10 +8,9 @@ import { Input, Row, Col, FormFeedback, Label, Card, CardHeader, CardBody, CardC
 import UnsTable from "../../components/UnsTable/"
 import UnsAsyncSeeker from "../../components/UnsAsyncSeeker/UnsAsyncSeeker.js"
 import UnsLabeledInput from "../../components/UnsLabeledInput/UnsLabeledInput.js"
-import UnsGoogleMap from "../../components/UnsGoogleMap/UnsGoogleMap.js"
 import FiltersDropdown from "../../components/FiltersMap/FiltersDropdown.js"
 import RankingModal from "../../components/FiltersMap/RankingModal.js";
-
+import UnsLeafletMap from "../../components/UnsGoogleMap/UnsLeafletmap.js";
 
 
 import { withScriptjs, withGoogleMap, GoogleMap, Marker, DirectionsRenderer } from "react-google-maps"
@@ -218,7 +217,7 @@ class Mapa extends Component {
                 />
 
                 <Row className="mt-1">
-                    <UnsGoogleMap center={this.state.center} markers={markers} />
+                    <UnsLeafletMap center={this.state.center} markers={markers} />
                 </Row>
             </div>
         );

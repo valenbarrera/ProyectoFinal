@@ -7,6 +7,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import 'simple-line-icons/css/simple-line-icons.css';
 import '../scss/style.scss'
 import '../scss/core/_dropdown-menu-right.scss'
+import 'leaflet/dist/leaflet.css';
 
 import Full from './containers/Full/'
 

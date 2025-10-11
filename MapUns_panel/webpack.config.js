@@ -3,6 +3,7 @@ const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+require.resolve('core-js/library/modules/_object-gopn-ext');
 
 const extractCSS = new ExtractTextPlugin('[name].fonts.css');
 const extractSCSS = new ExtractTextPlugin('[name].styles.css');
@@ -34,20 +35,20 @@ module.exports = (env = {}) => {
     module: {
       rules: [
         {
-          test: /\.(js|jsx)$/,
+          test: /\.js$/,
           exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              cacheDirectory: true,
-              presets: ['react', 'env'],
-              "plugins": ["transform-object-rest-spread",
-                ["transform-class-properties", { "spec": true }],
-                ["transform-runtime", {
-                "polyfill": false,
-                "regenerator": true
-              }]]
-            }
+          loader: 'babel-loader',
+          options: {
+            babelrc: false,
+            presets: ["env", "react"],
+            plugins: [
+              "transform-class-properties",
+              "transform-object-rest-spread",
+              ["transform-runtime", {
+                polyfill: false,
+                regenerator: true
+              }]
+            ]
           }
         },
         {
