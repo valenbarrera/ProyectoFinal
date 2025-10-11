@@ -7,11 +7,11 @@
 
 
 .app.bgimg {
-    .logo-darsur {
+    .logo-uns {
         height: 220px;
         background-repeat: no-repeat;
         background-position: center;
-        background-image: url('../public/img/logo-darsur.jpg');
+        background-image: url('../public/img/logo-uns.png');
     }
     background: url('../public/img/login-bg-mobile.jpg');
     background-size: cover;
@@ -27,9 +27,9 @@
         width: 100%;
         text-align: center;
         .logoParadigma {
-            background-image: url('../public/img/logo-Paradigma.svg');
-            width: 100px;
-            height: 40px;
+            background-image: url('../public/img/logo.png');
+            width: 200px;
+            height: 55px;
             background-size: cover;
             display: none;
         }

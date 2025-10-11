@@ -36,7 +36,7 @@ class Login extends Component {
               <CardGroup className="h-100">
                 <Card className="p-4 rounded-0">
                   <CardBody className="mt-4 mb-auto">
-                    <div className="logo-darsur">
+                    <div className="logo-uns">
                       <img />
                     </div>
                     <InputGroup className="my-3 form-row">
