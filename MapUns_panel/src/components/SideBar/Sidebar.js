@@ -119,7 +119,7 @@ class Sidebar extends Component {
           </Nav>
         </nav>
         <SidebarMinimizer />
-        <span className="author-brand mx-auto"><a href="http://https://www.uns.edu.ar/.com.ar">Universidad Nacional del Sur</a> &copy; {new Date().getFullYear()}</span>
+        <span className="author-brand mx-auto"><a href="https://www.uns.edu.ar">Universidad Nacional del Sur</a> &copy; {new Date().getFullYear()}</span>
       </div>
     )
   }
