@@ -17,9 +17,14 @@ const FiltersDropdown = ({
   onRegularChange
 }) => {
   const [carreraOpen, setCarreraOpen] = React.useState(false);
+  const [regularOpen, setRegularOpen] = React.useState(false);
   const selectedCarreras = Array.isArray(carrera) ? carrera : [];
   const selected = selectedCarreras.length > 0 ? selectedCarreras[0] : null;
   const summary = selected ? selected : 'Todas';
+  const regularValue = typeof regular === 'boolean' ? (regular ? 'true' : 'false') : (regular || 'todos');
+  const regularSummary = regularValue === 'todos'
+    ? 'Todas'
+    : (regularValue === 'true' ? 'Regulares' : 'No regulares');
 
   const emitCarreraChange = (values) => {
     if (onCarreraChange) {
@@ -70,15 +75,34 @@ const FiltersDropdown = ({
             {/* Regularidad */}
             <Col md={3} className="mb-3">
               <Label style={{ color: 'white' }}>Regularidad</Label>
-              <Input
-                type="select"
-                value={regular || "todos"}
-                onChange={onRegularChange}
-              >
-                <option value="todos">Todas</option>
-                <option value="true">Regulares</option>
-                <option value="false">No regulares</option>
-              </Input>
+              <Dropdown isOpen={regularOpen} toggle={() => setRegularOpen(!regularOpen)}>
+                <DropdownToggle caret color="light" className="w-100 text-left">
+                  {regularSummary}
+                </DropdownToggle>
+                <DropdownMenu className="w-100">
+                  <DropdownItem
+                    toggle={false}
+                    active={regularValue === 'todos'}
+                    onClick={() => { onRegularChange && onRegularChange({ target: { value: 'todos' } }); setRegularOpen(false); }}
+                  >
+                    Todas
+                  </DropdownItem>
+                  <DropdownItem
+                    toggle={false}
+                    active={regularValue === 'true'}
+                    onClick={() => { onRegularChange && onRegularChange({ target: { value: 'true' } }); setRegularOpen(false); }}
+                  >
+                    Regulares
+                  </DropdownItem>
+                  <DropdownItem
+                    toggle={false}
+                    active={regularValue === 'false'}
+                    onClick={() => { onRegularChange && onRegularChange({ target: { value: 'false' } }); setRegularOpen(false); }}
+                  >
+                    No regulares
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </Col>
 
             {/* Fecha desde */}

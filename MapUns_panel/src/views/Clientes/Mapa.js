@@ -137,11 +137,15 @@ class Mapa extends Component {
 
     // Método para abrir el sidebar y sincronizar los estados
     openFiltersDropdown = () => {
+        const currentRegular = (this.state.regular === null || typeof this.state.regular === 'undefined')
+            ? 'todos'
+            : String(this.state.regular);
         this.setState({
             modalFiltrosOpen: true,
             tempCarrera: Array.isArray(this.state.carrera) ? this.state.carrera : [],
             tempFechaDesde: this.state.fechaDesde,
             tempFechaHasta: this.state.fechaHasta,
+            tempRegular: currentRegular,
         });
     };
 
@@ -225,6 +229,7 @@ class Mapa extends Component {
                     onCancel={() => this.setState({ modalFiltrosOpen: false })}
                     onClearAll={this.clearAllFilters}
                     carrera={this.state.tempCarrera}
+                    regular={this.state.tempRegular}
                     carrerasOptions={this.state.carrerasOptions}
                     fechaDesde={this.state.tempFechaDesde}
                     fechaHasta={this.state.tempFechaHasta}
