@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Label, Row, Col, Input, Collapse, Card, CardBody } from 'reactstrap';
+import { Button, Label, Row, Col, Input, Collapse, Card, CardBody, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 const FiltersDropdown = ({
   isOpen,
@@ -7,6 +7,7 @@ const FiltersDropdown = ({
   onCancel,
   onClearAll,
   carrera,
+  carrerasOptions = [],
   fechaDesde,
   fechaHasta,
   regular,
@@ -15,6 +16,28 @@ const FiltersDropdown = ({
   onFechaHastaChange,
   onRegularChange
 }) => {
+  const [carreraOpen, setCarreraOpen] = React.useState(false);
+  const selectedCarreras = Array.isArray(carrera) ? carrera : [];
+  const selected = selectedCarreras.length > 0 ? selectedCarreras[0] : null;
+  const summary = selected ? selected : 'Todas';
+
+  const emitCarreraChange = (values) => {
+    if (onCarreraChange) {
+      const eventLike = { target: { selectedOptions: values.map(v => ({ value: v })) } };
+      onCarreraChange(eventLike);
+    }
+  };
+
+  const chooseTodas = () => {
+    emitCarreraChange([]);
+    setCarreraOpen(false);
+  };
+
+  const chooseCarrera = (value) => {
+    emitCarreraChange([value]);
+    setCarreraOpen(false);
+  };
+
   return (
     <Collapse isOpen={isOpen}>
       <Card className="mt-2">
@@ -23,16 +46,25 @@ const FiltersDropdown = ({
             {/* Carrera */}
             <Col md={3} className="mb-3">
               <Label style={{ color: 'white' }}>Carrera</Label>
-              <Input
-                type="select"
-                value={carrera || "todos"}
-                onChange={onCarreraChange}
-              >
-                <option value="todos">Todas</option>
-                <option value="Ingeniería en Sistemas">Ingeniería en Sistemas</option>
-                <option value="Licenciatura en Informática">Licenciatura en Informática</option>
-                <option value="Tecnicatura Universitaria en Programación">Tecnicatura Universitaria en Programación</option>
-              </Input>
+              <Dropdown isOpen={carreraOpen} toggle={() => setCarreraOpen(!carreraOpen)}>
+                <DropdownToggle caret color="light" className="w-100 text-left">
+                  {summary}
+                </DropdownToggle>
+                <DropdownMenu className="w-100" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                  <DropdownItem toggle={false} active={!selected} onClick={chooseTodas}>
+                    Todas
+                  </DropdownItem>
+                  {Array.isArray(carrerasOptions) && carrerasOptions.length > 0 ? (
+                    carrerasOptions.map((c) => (
+                      <DropdownItem key={c} toggle={false} active={selected === c} onClick={() => chooseCarrera(c)}>
+                        {c}
+                      </DropdownItem>
+                    ))
+                  ) : (
+                    <DropdownItem disabled>Cargando...</DropdownItem>
+                  )}
+                </DropdownMenu>
+              </Dropdown>
             </Col>
 
             {/* Regularidad */}

@@ -27,6 +27,7 @@ class Mapa extends Component {
             provincia_id: null,
             direcciones: [],
             center: null,
+            carrerasOptions: [],
             tempCarrera: [],
             tempFechaDesde: null,
             tempFechaHasta: null,
@@ -46,7 +47,7 @@ class Mapa extends Component {
         if (provincia_id) params.push("provincia_id=" + provincia_id);
         if (localidad_id) params.push("localidad_id=" + localidad_id);
 
-        if (this.state.carrera && this.state.carrera !== "todos") {
+        if (Array.isArray(this.state.carrera) && this.state.carrera.length > 0) {
             params.push("carrera=" + this.state.carrera.join(","));
         }
         if (this.state.fechaDesde && this.state.fechaDesde !== "todos") {
@@ -63,16 +64,31 @@ class Mapa extends Component {
 
         axios.get(url, auth.header())
             .then(function (response) {
-            self.setState({
-                direcciones: response.data.rows,
-                center: response.data.center
+                const rows = response.data.rows || [];
+                self.setState({
+                    direcciones: rows,
+                    center: response.data.center,
+                });
             });
-         });
     }
 
 
     componentDidMount() {
         this.GetDirecciones(this.state.provincia_id, this.state.localidad_id);
+        this.FetchCarrerasOptions();
+    }
+
+    FetchCarrerasOptions() {
+        const self = this;
+        axios.get(api.alumnos.maplist, auth.header())
+            .then(function (response) {
+                const rows = response.data.rows || [];
+                const carreras = Array.from(new Set(rows
+                    .map(r => r.carrera)
+                    .filter(Boolean)))
+                    .sort();
+                self.setState({ carrerasOptions: carreras });
+            });
     }
 
     onChangeProvincia(data) {
@@ -99,17 +115,21 @@ class Mapa extends Component {
 
     // Método para aplicar los filtros
     applyFilters = () => {
+        const nextCarrera = Array.isArray(this.state.tempCarrera) && this.state.tempCarrera.length > 0
+            ? this.state.tempCarrera
+            : null;
+        const nextRegular = this.state.tempRegular === "todos" ? null : this.state.tempRegular;
         this.setState({
-            carrera: this.state.tempCarrera,
+            carrera: nextCarrera,
             fechaDesde: this.state.tempFechaDesde,
             fechaHasta: this.state.tempFechaHasta,
-            regular: this.state.tempRegular,
+            regular: nextRegular,
             filtrosOpen: false,
         }, () => {
             this.GetDirecciones(
-            this.state.provincia_id,
-            this.state.localidad_id,
-            this.state.siempreclientes
+                this.state.provincia_id,
+                this.state.localidad_id,
+                this.state.siempreclientes
             );
         });
     };
@@ -119,7 +139,7 @@ class Mapa extends Component {
     openFiltersDropdown = () => {
         this.setState({
             modalFiltrosOpen: true,
-            tempCarrera: this.state.vendedor,
+            tempCarrera: Array.isArray(this.state.carrera) ? this.state.carrera : [],
             tempFechaDesde: this.state.fechaDesde,
             tempFechaHasta: this.state.fechaHasta,
         });
@@ -138,7 +158,7 @@ class Mapa extends Component {
             tempFechaDesde: null,
             tempFechaHasta: null,
             tempRegular: "todos",
-            carrera: [],
+            carrera: null,
             fechaDesde: null,
             fechaHasta: null,
             regular: "todos",
@@ -205,12 +225,18 @@ class Mapa extends Component {
                     onCancel={() => this.setState({ modalFiltrosOpen: false })}
                     onClearAll={this.clearAllFilters}
                     carrera={this.state.tempCarrera}
+                    carrerasOptions={this.state.carrerasOptions}
                     fechaDesde={this.state.tempFechaDesde}
                     fechaHasta={this.state.tempFechaHasta}
                     actividad={this.state.tempActividad}
-                    onCarreraChange={(data) => this.setState({ tempCarrera: data === "todos"
-                        ? "todos"
-                        : (Array.isArray(data) ? data.map(d => d.pk) : (data ? [data.pk] : [])) })}
+                    onCarreraChange={(e) => {
+                        const values = Array.from(e.target.selectedOptions).map(o => o.value);
+                        if (values.includes("todos")) {
+                            this.setState({ tempCarrera: [] });
+                        } else {
+                            this.setState({ tempCarrera: values });
+                        }
+                    }}
                     onRegularChange={(e) => this.setState({ tempRegular: e.target.value })}
                     onFechaDesdeChange={(e) => this.setState({ tempFechaDesde: e.target.value })}
                     onFechaHastaChange={(e) => this.setState({ tempFechaHasta: e.target.value })}
