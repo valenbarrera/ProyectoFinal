@@ -32,24 +32,9 @@ def List(request):
 @authentication_classes((TokenAuthentication, BasicAuthentication))
 @permission_classes((IsAuthenticated,))
 def Select(request):
+    db_query = Localidades.objects.all().values('id', 'nombre')
+    return JsonResponse({"rows": list(db_query)})
 
-    subq = subq.filter(localidad_id=OuterRef('pk')).values('localidad_id').annotate(total=Count('pk'))
-    
-    db_query = Localidades.objects.annotate(
-        count=Subquery(subq.values('total'),output_field=IntegerField())
-    ).filter(count__gt=0)
-    
-    provincia_id = request.GET.get("provincia_id", None)
-    if provincia_id is not None:
-        db_query = db_query.filter(provincia_id=provincia_id)
-    
-    ar_reply = list_utils.obj_filtered_list(
-        db_query, 1, 1,
-        ['pk','nombre','count'],
-        [], [{'id':'count', 'desc': True}],
-        False
-    )['list']
-    return JsonResponse({"rows": ar_reply})
 
 
 @api_view(['POST'])

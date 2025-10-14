@@ -28,24 +28,17 @@ def List(request):
     db_query = Provincias.objects.filter(debaja=False)
     return list_utils.obj_tables_default(db_query,obj_data)
 
+from Alumnos.models import Alumnos
+
 @api_view(['GET'])
 @authentication_classes((TokenAuthentication, BasicAuthentication))
 @permission_classes((IsAuthenticated,))
 def Select(request):
+    # Trae todas las provincias (ya que no hay campo 'debaja')
+    db_query = Provincias.objects.all().values('id', 'nombre')
+    return JsonResponse({"rows": list(db_query)})
 
-    subq = subq.filter(localidad__provincia_id=OuterRef('pk')).values('localidad__provincia_id').annotate(total=Count('pk'))
 
-    db_query = Provincias.objects.annotate(
-        count=Subquery(subq.values('total'),output_field=IntegerField())
-    ).filter(count__gt=0)
-
-    ar_reply = list_utils.obj_filtered_list(
-        db_query, 1, 1,
-        ['pk','nombre','count'],
-        [], [{'id':'count', 'desc': True}],
-        False
-    )['list']
-    return JsonResponse({"rows": ar_reply})
 
 
 @api_view(['POST'])
