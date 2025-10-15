@@ -91,25 +91,28 @@ class Mapa extends Component {
             });
     }
 
-    onChangeProvincia(data) {
-        if (data) {
-            this.GetDirecciones(data.pk, null);
-            this.setState({ provincia_id: data.pk });
-        }
-        else {
-            this.GetDirecciones(null, null);
-            this.setState({ provincia_id: null });
-            this.onChangeLocalidad(null);
+    onChangeProvincia = (data) => {
+        const pk = data ? (data.pk !== undefined ? data.pk : (data.id !== undefined ? data.id : (data.value !== undefined ? data.value : null))) : null;
+        if (pk) {
+            this.setState({ provincia_id: pk, localidad_id: null }, () => {
+                this.GetDirecciones(pk, null);
+            });
+        } else {
+            this.setState({ provincia_id: null, localidad_id: null }, () => {
+                this.GetDirecciones(null, null);
+            });
         }
     }
-    onChangeLocalidad(data) {
-        if (data) {
-            this.GetDirecciones(this.state.provincia_id, data.pk);
-            this.setState({ localidad_id: data.pk });
-        }
-        else {
-            this.GetDirecciones(this.state.provincia_id, null);
-            this.setState({ localidad_id: null });
+    onChangeLocalidad = (data) => {
+        const pk = data ? (data.pk !== undefined ? data.pk : (data.id !== undefined ? data.id : (data.value !== undefined ? data.value : null))) : null;
+        if (pk) {
+            this.setState({ localidad_id: pk }, () => {
+                this.GetDirecciones(this.state.provincia_id, pk);
+            });
+        } else {
+            this.setState({ localidad_id: null }, () => {
+                this.GetDirecciones(this.state.provincia_id, null);
+            });
         }
     }
 
@@ -210,14 +213,16 @@ class Mapa extends Component {
             <div>
                 <Row className="">
                     <div className="col-5 col-md-3">
-                        <UnsLabeledInput label={<span style={{ color: 'white' }}>Provincia</span>} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker onChange={(data) => this.onChangeProvincia(data)} fieldName={""} url={api.locaciones.provincias.select + "?incluir_debaja=" + this.state.incluirDebaja}
-                            nombreField={"nombre"} value={this.state.provincia_id} />} />
+                        <UnsLabeledInput label={<span style={{ color: 'white' }}>Provincia</span>} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker key={"prov_" + (this.state.provincia_id || "none")} onChange={(data) => this.onChangeProvincia(data)} fieldName={"provincia_id"} url={api.locaciones.provincias.select}
+                            nombreField={"nombre"} pkField={"id"} value={this.state.provincia_id} narrowToPkOnLoad={false} />} />
                     </div>
                     <div className="col-5 col-md-3">
-                        <UnsLabeledInput label={<span style={{ color: 'white' }}>Localidad</span>} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker onChange={(data) => this.onChangeLocalidad(data)}
+                        <UnsLabeledInput label={<span style={{ color: 'white' }}>Localidad</span>} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker key={"loc_" + (this.state.provincia_id || "none")} onChange={(data) => this.onChangeLocalidad(data)}
                             disabled={!this.state.provincia_id}
-                            fieldName={""} url={api.locaciones.localidades.select + "?provincia_id=" + this.state.provincia_id + "&incluir_debaja=" + this.state.incluirDebaja}
-                            nombreField={"nombre"} value={this.state.localidad_id} />} />
+                            fieldName={"localidad_id"}
+                            url={api.locaciones.localidades.select + (this.state.provincia_id ? ("?provincia_id=" + this.state.provincia_id + "&provincia=" + this.state.provincia_id + "&provincia__id=" + this.state.provincia_id + "&provincia_id__exact=" + this.state.provincia_id) : "")}
+                            nombreField={"nombre"} pkField={"id"} value={this.state.localidad_id} narrowToPkOnLoad={false}
+                            clientFilter={(opt) => String(opt.provincia_id) === String(this.state.provincia_id)} />} />
                     </div>
                     <div>
                         <button className="btn btn-primary" onClick={() => this.setState({ modalFiltrosOpen: !this.state.modalFiltrosOpen })}>Filtros</button>

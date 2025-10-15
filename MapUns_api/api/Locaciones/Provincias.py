@@ -25,7 +25,7 @@ from Alumnos.models import Alumnos
 @permission_classes((IsAuthenticated,))
 def List(request):
     obj_data = json.loads(request.GET.get('data'))
-    db_query = Provincias.objects.filter(debaja=False)
+    db_query = Provincias.objects.filter()
     return list_utils.obj_tables_default(db_query,obj_data)
 
 from Alumnos.models import Alumnos
@@ -34,7 +34,6 @@ from Alumnos.models import Alumnos
 @authentication_classes((TokenAuthentication, BasicAuthentication))
 @permission_classes((IsAuthenticated,))
 def Select(request):
-    # Trae todas las provincias (ya que no hay campo 'debaja')
     db_query = Provincias.objects.all().values('id', 'nombre')
     return JsonResponse({"rows": list(db_query)})
 

@@ -25,7 +25,7 @@ from Alumnos.models import Alumnos
 @permission_classes((IsAuthenticated,))
 def List(request):
     obj_data = json.loads(request.GET.get('data'))
-    db_query = Localidades.objects.filter(debaja=False)
+    db_query = Localidades.objects.filter()
     return list_utils.obj_tables_default(db_query,obj_data)
 
 @api_view(['GET'])

@@ -3,13 +3,13 @@ export default {
       icon: 'fa fa-map',
       name: 'Mapa',
       url: '/mapa/',
-      permission: 'ejemplo_view'
+      permission: 'superadmin'
     },
     {
       icon: 'fa fa-user',
       name: 'Clientes',
       url: '/clientes/',
-      permission: 'ejemplo_view'
+      permission: 'superadmin'
     },
     {
       name: 'Geográficas',
@@ -17,12 +17,12 @@ export default {
       children: [{
           name: 'Localidades',
           url: '/configuracion/geo/localidades/',
-          permission: 'ejemplo_view'
+          permission: 'superadmin'
         },
         {
           name: 'Provincias',
           url: '/configuracion/geo/provincias/',
-          permission: 'ejemplo_view'
+          permission: 'superadmin'
         },
       ]
     },

@@ -25,6 +25,13 @@ class UnsAsyncSeeker extends Component {
         };
     }
 
+    componentDidMount() {
+        // Initial load so the current value can be resolved to an option label
+        if (this.props.url) {
+            this.getOptions(this.props.url);
+        }
+    }
+
     static propTypes = {
         fieldName: PropTypes.string.isRequired,
         label: PropTypes.string,
@@ -40,6 +47,11 @@ class UnsAsyncSeeker extends Component {
         CreateComponent: PropTypes.any,
         DetailComponent: PropTypes.any,
         multiselect: PropTypes.bool,
+        // When true (default), loadOptions('') narrows to current pk via ?pks=.
+        // Set to false to always fetch the full list (useful for dependent selects).
+        narrowToPkOnLoad: PropTypes.bool,
+        // Optional client-side filter applied to fetched rows
+        clientFilter: PropTypes.func,
         loadingPlaceholder: PropTypes.string,
         placeholder: PropTypes.string,
         searchPromptText: PropTypes.string,
@@ -117,7 +129,7 @@ class UnsAsyncSeeker extends Component {
                 () => this.getOptions(url, callback)
             );
         } else {
-            if (this.state.pk) {
+            if (this.state.pk && (this.props.narrowToPkOnLoad !== false)) {
                 url = this.urlAddParameter(url, "=", "pks", this.state.pk.toString());
             }
             this.getOptions(url, callback);
@@ -147,6 +159,11 @@ class UnsAsyncSeeker extends Component {
                                 const { searching } = this.state;
                                 // Genera una option deshabilitada como label
                                 let rows = response.data.rows;
+
+                                // Apply client-side filter if provided
+                                if (this.props.clientFilter && typeof this.props.clientFilter === 'function') {
+                                    rows = rows.filter(this.props.clientFilter);
+                                }
 
                                 const { optionsFields } = this.props;
                                 if (optionsFields && typeof optionsFields[0] === 'object') {
@@ -198,9 +215,11 @@ class UnsAsyncSeeker extends Component {
     }
 
     getOption = value => {
-        // Busca en el array de opciones el valor deseado
+        // Busca en el array de opciones el valor deseado tolerando diferencias de tipo
         const { options, pkField } = this.state;
-        return options.find(option => option[pkField] === value);
+        if (typeof value === 'undefined' || value === null) return null;
+        const val = String(value);
+        return options.find(option => String(option[pkField]) === val) || null;
     }
 
     created = value => {

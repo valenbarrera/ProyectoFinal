@@ -174,5 +174,5 @@ def Delete(request, id):
 
 def Export(request):
     obj_data = json.loads(request.GET.get('data'))
-    db_query = Alumnos.objects.filter(debaja=False)
+    db_query = Alumnos.objects.filter()
     return list_reports.file_default_export(db_query,'Alumnos',obj_data)
