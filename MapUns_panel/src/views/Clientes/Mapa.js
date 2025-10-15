@@ -230,26 +230,28 @@ class Mapa extends Component {
         }
         return (
             <div>
-                {/* Filtros de ubicación (solo para procedencia) */}
-                {this.state.ubicacionTipo === 'procedencia' && (
-                    <Row className="">
-                        <div className="col-12 col-md-6 col-lg-4">
-                            <UnsLabeledInput label={<span style={{ color: 'white' }}>Provincia</span>} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker key={"prov_" + (this.state.provincia_id || "none")} onChange={(data) => this.onChangeProvincia(data)} fieldName={"provincia_id"} url={api.locaciones.provincias.select}
-                                nombreField={"nombre"} pkField={"id"} value={this.state.provincia_id} narrowToPkOnLoad={false} />} />
-                        </div>
-                        <div className="col-12 col-md-6 col-lg-4">
-                            <UnsLabeledInput label={<span style={{ color: 'white' }}>Localidad</span>} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker key={"loc_" + (this.state.provincia_id || "none")} onChange={(data) => this.onChangeLocalidad(data)}
-                                disabled={!this.state.provincia_id}
-                                fieldName={"localidad_id"}
-                                url={api.locaciones.localidades.select + (this.state.provincia_id ? ("?provincia_id=" + this.state.provincia_id + "&provincia=" + this.state.provincia_id + "&provincia__id=" + this.state.provincia_id + "&provincia_id__exact=" + this.state.provincia_id) : "")}
-                                nombreField={"nombre"} pkField={"id"} value={this.state.localidad_id} narrowToPkOnLoad={false}
-                                clientFilter={(opt) => String(opt.provincia_id) === String(this.state.provincia_id)} />} />
-                        </div>
-                        <div>
-                            <button className="btn btn-primary" onClick={() => this.setState({ modalFiltrosOpen: !this.state.modalFiltrosOpen })}>Filtros</button>
-                        </div>
-                    </Row>
-                )}
+                {/* Filtros de ubicación: Provincia/Localidad solo para Procedencia; botón Filtros siempre visible */}
+                <Row className="">
+                    {this.state.ubicacionTipo === 'procedencia' && (
+                        <React.Fragment>
+                            <div className="col-12 col-md-6 col-lg-4">
+                                <UnsLabeledInput label={<span style={{ color: 'white' }}>Provincia</span>} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker key={"prov_" + (this.state.provincia_id || "none")} onChange={(data) => this.onChangeProvincia(data)} fieldName={"provincia_id"} url={api.locaciones.provincias.select}
+                                    nombreField={"nombre"} pkField={"id"} value={this.state.provincia_id} narrowToPkOnLoad={false} />} />
+                            </div>
+                            <div className="col-12 col-md-6 col-lg-4">
+                                <UnsLabeledInput label={<span style={{ color: 'white' }}>Localidad</span>} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker key={"loc_" + (this.state.provincia_id || "none")} onChange={(data) => this.onChangeLocalidad(data)}
+                                    disabled={!this.state.provincia_id}
+                                    fieldName={"localidad_id"}
+                                    url={api.locaciones.localidades.select + (this.state.provincia_id ? ("?provincia_id=" + this.state.provincia_id + "&provincia=" + this.state.provincia_id + "&provincia__id=" + this.state.provincia_id + "&provincia_id__exact=" + this.state.provincia_id) : "")}
+                                    nombreField={"nombre"} pkField={"id"} value={this.state.localidad_id} narrowToPkOnLoad={false}
+                                    clientFilter={(opt) => String(opt.provincia_id) === String(this.state.provincia_id)} />} />
+                            </div>
+                        </React.Fragment>
+                    )}
+                    <div>
+                        <button className="btn btn-primary" onClick={() => this.setState({ modalFiltrosOpen: !this.state.modalFiltrosOpen })}>Filtros</button>
+                    </div>
+                </Row>
                 <FiltersDropdown
                     isOpen={this.state.modalFiltrosOpen}
                     onApply={this.applyFilters}
@@ -277,8 +279,7 @@ class Mapa extends Component {
                 <Row className="mt-1">
                     <UnsLeafletMap center={this.state.center} markers={markers} />
                 </Row>
-                {/* Toggle de ubicación flotante en esquina inferior derecha */}
-                <div style={{ position: 'fixed', right: 16, bottom: 16, zIndex: 1000 }}>
+                <div style={{ position: 'fixed', right: 16, bottom: 40, zIndex: 1000 }}>
                     <div style={{ background: 'rgba(0,0,0,0.6)', borderRadius: 6, padding: 8 }}>
                         <DisplayToggle value={this.state.ubicacionTipo} onChange={this.handleUbicacionChange} disableEstudio={true} />
                     </div>
