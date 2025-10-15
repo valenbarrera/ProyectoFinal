@@ -9,6 +9,7 @@ import UnsTable from "../../components/UnsTable/"
 import UnsAsyncSeeker from "../../components/UnsAsyncSeeker/UnsAsyncSeeker.js"
 import UnsLabeledInput from "../../components/UnsLabeledInput/UnsLabeledInput.js"
 import FiltersDropdown from "../../components/FiltersMap/FiltersDropdown.js"
+import DisplayToggle from "../../components/FiltersMap/DisplayToggle.js";
 import RankingModal from "../../components/FiltersMap/RankingModal.js";
 import UnsLeafletMap from "../../components/UnsGoogleMap/UnsLeafletmap.js";
 
@@ -27,6 +28,7 @@ class Mapa extends Component {
             provincia_id: null,
             direcciones: [],
             center: null,
+            ubicacionTipo: 'procedencia',
             carrerasOptions: [],
             tempCarrera: [],
             tempFechaDesde: null,
@@ -36,6 +38,19 @@ class Mapa extends Component {
             carrera: null,
             tempActividad: null,
         };
+    }
+
+    handleUbicacionChange = (value) => {
+        // Si cambia a estudio, ocultamos/desactivamos provincia/localidad y limpiamos selección
+        if (value === 'estudio') {
+            this.setState({ ubicacionTipo: value, provincia_id: null, localidad_id: null }, () => {
+                this.GetDirecciones(null, null);
+            });
+        } else {
+            this.setState({ ubicacionTipo: value }, () => {
+                this.GetDirecciones(this.state.provincia_id, this.state.localidad_id);
+            });
+        }
     }
 
     GetDirecciones(provincia_id, localidad_id) {
@@ -58,6 +73,10 @@ class Mapa extends Component {
         }
         if (this.state.regular && this.state.regular !== "todos") {
             params.push("regularidad=" + this.state.regular);
+        }
+        // Preparado para futura selección de origen/estudio (backend lo ignorará por ahora)
+        if (this.state.ubicacionTipo) {
+            params.push("ubicacion=" + this.state.ubicacionTipo);
         }
         // armar url final
         var url = api.alumnos.maplist + "?" + params.join("&");
@@ -211,23 +230,26 @@ class Mapa extends Component {
         }
         return (
             <div>
-                <Row className="">
-                    <div className="col-5 col-md-3">
-                        <UnsLabeledInput label={<span style={{ color: 'white' }}>Provincia</span>} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker key={"prov_" + (this.state.provincia_id || "none")} onChange={(data) => this.onChangeProvincia(data)} fieldName={"provincia_id"} url={api.locaciones.provincias.select}
-                            nombreField={"nombre"} pkField={"id"} value={this.state.provincia_id} narrowToPkOnLoad={false} />} />
-                    </div>
-                    <div className="col-5 col-md-3">
-                        <UnsLabeledInput label={<span style={{ color: 'white' }}>Localidad</span>} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker key={"loc_" + (this.state.provincia_id || "none")} onChange={(data) => this.onChangeLocalidad(data)}
-                            disabled={!this.state.provincia_id}
-                            fieldName={"localidad_id"}
-                            url={api.locaciones.localidades.select + (this.state.provincia_id ? ("?provincia_id=" + this.state.provincia_id + "&provincia=" + this.state.provincia_id + "&provincia__id=" + this.state.provincia_id + "&provincia_id__exact=" + this.state.provincia_id) : "")}
-                            nombreField={"nombre"} pkField={"id"} value={this.state.localidad_id} narrowToPkOnLoad={false}
-                            clientFilter={(opt) => String(opt.provincia_id) === String(this.state.provincia_id)} />} />
-                    </div>
-                    <div>
-                        <button className="btn btn-primary" onClick={() => this.setState({ modalFiltrosOpen: !this.state.modalFiltrosOpen })}>Filtros</button>
-                    </div>
-                </Row>
+                {/* Filtros de ubicación (solo para procedencia) */}
+                {this.state.ubicacionTipo === 'procedencia' && (
+                    <Row className="">
+                        <div className="col-12 col-md-6 col-lg-4">
+                            <UnsLabeledInput label={<span style={{ color: 'white' }}>Provincia</span>} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker key={"prov_" + (this.state.provincia_id || "none")} onChange={(data) => this.onChangeProvincia(data)} fieldName={"provincia_id"} url={api.locaciones.provincias.select}
+                                nombreField={"nombre"} pkField={"id"} value={this.state.provincia_id} narrowToPkOnLoad={false} />} />
+                        </div>
+                        <div className="col-12 col-md-6 col-lg-4">
+                            <UnsLabeledInput label={<span style={{ color: 'white' }}>Localidad</span>} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker key={"loc_" + (this.state.provincia_id || "none")} onChange={(data) => this.onChangeLocalidad(data)}
+                                disabled={!this.state.provincia_id}
+                                fieldName={"localidad_id"}
+                                url={api.locaciones.localidades.select + (this.state.provincia_id ? ("?provincia_id=" + this.state.provincia_id + "&provincia=" + this.state.provincia_id + "&provincia__id=" + this.state.provincia_id + "&provincia_id__exact=" + this.state.provincia_id) : "")}
+                                nombreField={"nombre"} pkField={"id"} value={this.state.localidad_id} narrowToPkOnLoad={false}
+                                clientFilter={(opt) => String(opt.provincia_id) === String(this.state.provincia_id)} />} />
+                        </div>
+                        <div>
+                            <button className="btn btn-primary" onClick={() => this.setState({ modalFiltrosOpen: !this.state.modalFiltrosOpen })}>Filtros</button>
+                        </div>
+                    </Row>
+                )}
                 <FiltersDropdown
                     isOpen={this.state.modalFiltrosOpen}
                     onApply={this.applyFilters}
@@ -255,6 +277,12 @@ class Mapa extends Component {
                 <Row className="mt-1">
                     <UnsLeafletMap center={this.state.center} markers={markers} />
                 </Row>
+                {/* Toggle de ubicación flotante en esquina inferior derecha */}
+                <div style={{ position: 'fixed', right: 16, bottom: 16, zIndex: 1000 }}>
+                    <div style={{ background: 'rgba(0,0,0,0.6)', borderRadius: 6, padding: 8 }}>
+                        <DisplayToggle value={this.state.ubicacionTipo} onChange={this.handleUbicacionChange} disableEstudio={true} />
+                    </div>
+                </div>
             </div>
         );
     }
