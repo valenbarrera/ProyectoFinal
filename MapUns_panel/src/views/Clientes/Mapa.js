@@ -248,7 +248,32 @@ class Mapa extends Component {
                             </div>
                         </React.Fragment>
                     )}
-                    <div>
+                    <div className={this.state.ubicacionTipo === 'procedencia' ? "col-12 col-md-6 col-lg-4 d-flex align-items-end justify-content-md-end mt-2 mt-lg-0" : "col-12 d-flex justify-content-end mt-2"}>
+                        <input
+                            type="file"
+                            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                            className="d-none"
+                            ref={el => this.fileInput = el}
+                            onChange={async (e) => {
+                                const file = e.target.files && e.target.files[0];
+                                if (!file) return;
+                                try {
+                                    const form = new FormData();
+                                    form.append('file', file);
+                                    await axios.post(api.alumnos.import, form, auth.fileFormHeader());
+                                    this.GetDirecciones(this.state.provincia_id, this.state.localidad_id);
+                                    alert('Importación completada');
+                                } catch (err) {
+                                    const msg = (err && err.response && err.response.data && (err.response.data.error || err.response.data.detail)) || 'Error al importar';
+                                    alert(msg);
+                                } finally {
+                                    e.target.value = '';
+                                }
+                            }}
+                        />
+                        <button className="btn btn-success mr-2" onClick={() => this.fileInput && this.fileInput.click()}>
+                            Importar alumnos
+                        </button>
                         <button className="btn btn-primary" onClick={() => this.setState({ modalFiltrosOpen: !this.state.modalFiltrosOpen })}>Filtros</button>
                     </div>
                 </Row>
@@ -279,7 +304,7 @@ class Mapa extends Component {
                 <Row className="mt-1">
                     <UnsLeafletMap center={this.state.center} markers={markers} />
                 </Row>
-                <div style={{ position: 'fixed', right: 16, bottom: 40, zIndex: 1000 }}>
+                <div style={{ position: 'fixed', right: 16, bottom: 56, zIndex: 1000 }}>
                     <div style={{ background: 'rgba(0,0,0,0.6)', borderRadius: 6, padding: 8 }}>
                         <DisplayToggle value={this.state.ubicacionTipo} onChange={this.handleUbicacionChange} disableEstudio={true} />
                     </div>

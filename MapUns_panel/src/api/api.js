@@ -16,6 +16,7 @@ module.exports = {
         detail: BASE_URL + "alumnos/detail/",
         delete: BASE_URL + "alumnos/delete/",
         export: BASE_URL + "alumnos/export/",
+        import: BASE_URL + "alumnos/import/",
     },
     usuarios: {
         usuarios: {

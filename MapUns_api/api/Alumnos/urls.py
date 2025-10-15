@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^alumnos/detail/(?P<id>[0-9]+)/', Alumnos.Detail),
     url(r'^alumnos/delete/(?P<id>[0-9]+)/', Alumnos.Delete),
     url(r'^alumnos/export/', Alumnos.Export),
+    url(r'^alumnos/import/', Alumnos.Import),
 ]
