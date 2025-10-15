@@ -35,7 +35,7 @@ class Full extends Component {
                 <Route path="/configuracion/geo/localidades" name="Localidades" component={Localidades}/>
                 <Route path="/configuracion/geo/provincias" name="Provincias" component={Provincias}/>
                 
-                <Route path="/clientes" name="Clientes" component={Clientes}/>
+                <Route path="/alumnos" name="Alumnos" component={Clientes}/>
                 <Route path="/mapa" name="Mapa" component={Mapa}/>
 
 

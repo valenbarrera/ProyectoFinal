@@ -7,8 +7,8 @@ export default {
     },
     {
       icon: 'fa fa-user',
-      name: 'Clientes',
-      url: '/clientes/',
+      name: 'Alumnos',
+      url: '/alumnos/',
       permission: 'superadmin'
     },
     {
