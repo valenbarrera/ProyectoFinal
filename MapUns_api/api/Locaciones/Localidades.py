@@ -32,7 +32,37 @@ def List(request):
 @authentication_classes((TokenAuthentication, BasicAuthentication))
 @permission_classes((IsAuthenticated,))
 def Select(request):
-    db_query = Localidades.objects.all().values('id', 'nombre')
+    """
+    Devuelve localidades para selects con soporte de filtros básicos:
+    - provincia_id / provincia / provincia__id / provincia_id__exact: filtra por provincia
+    - nombre: búsqueda contains por nombre (para react-select)
+    - pks: restringe a ids específicos (para preselección)
+    Incluye provincia_id en el payload para permitir filtros del lado del cliente.
+    """
+    qs = Localidades.objects.all()
+
+    # Filtros por provincia (acepta varios aliases usados por el cliente)
+    provincia_id = request.GET.get('provincia_id')
+    
+    if provincia_id:
+        qs = qs.filter(provincia_id=provincia_id)
+
+    # Búsqueda por nombre (react-select usa el nombre del field)
+    nombre = request.GET.get('nombre')
+    if nombre:
+        qs = qs.filter(nombre__icontains=nombre)
+
+    # Restringir a un conjunto de pks cuando corresponde
+    pks = request.GET.get('pks')
+    if pks:
+        try:
+            ids = [int(x) for x in pks.split(',') if x.strip()]
+            qs = qs.filter(pk__in=ids)
+        except ValueError:
+            # Si hay valores inválidos, ignora el filtro de pks
+            pass
+
+    db_query = qs.values('id', 'nombre', 'provincia_id')
     return JsonResponse({"rows": list(db_query)})
 
 
