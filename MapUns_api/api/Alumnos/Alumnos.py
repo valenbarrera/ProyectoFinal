@@ -203,6 +203,7 @@ def Import(request):
 
     name = upload.name.lower()
     created = 0
+    updated = 0
     errors = []
 
     def to_text(val):
@@ -263,7 +264,7 @@ def Import(request):
         return qs.first()
 
     def upsert_row(row, idx):
-        nonlocal created
+        nonlocal created, updated
         try:
             nombre = to_text(row.get('nombre'))
             if not nombre:
@@ -295,30 +296,66 @@ def Import(request):
             if not localidad:
                 raise ValueError('Localidad no encontrada')
 
-            codigo = to_text(row.get('codigo'))
-            if not codigo:
-                dni_text = to_text(row.get('dni'))
-                codigo = (dni_text[:8] if dni_text else '') or (datetime.utcnow().strftime('%y%m%d%H'))
+            codigo_in = to_text(row.get('codigo'))
+            dni_in = to_text(row.get('dni')) or None
+            if not codigo_in:
+                codigo_in = (dni_in[:8] if dni_in else '') or (datetime.utcnow().strftime('%y%m%d%H'))
 
             fi_raw = row.get('fecha_inscripcion') or row.get('fecha') or row.get('fecha inscripcion') or row.get('fecha_de_inscripcion')
+            fi_parsed = parse_date_safe(fi_raw)
 
-            alumno = Alumnos(
-                nombre=nombre,
-                email=to_text(row.get('email')) or None,
-                telefono=to_text(row.get('telefono')) or None,
-                domicilio=to_text(row.get('domicilio')) or None,
-                localidad=localidad,
-                latitud=lat,
-                longitud=lng,
-                dni=to_text(row.get('dni')) or None,
-                codigo=codigo,
-                esRegular=get_bool(row.get('esregular') or row.get('regular') or row.get('es_regular')),
-                carrera=to_text(row.get('carrera')) or None,
-                fecha_inscripcion=parse_date_safe(fi_raw) or datetime.utcnow().date(),
-            )
-            alumno.full_clean()
-            alumno.save()
-            created += 1
+            # Upsert por DNI: si existe, actualiza; si no, crea
+            alumno = None
+            if dni_in:
+                alumno = Alumnos.objects.filter(dni=dni_in).first()
+
+            if alumno:
+                # Update only provided values; required fields always provided
+                alumno.nombre = nombre
+                alumno.latitud = lat
+                alumno.longitud = lng
+                alumno.localidad = localidad
+                email_in = to_text(row.get('email'))
+                if email_in != '':
+                    alumno.email = email_in
+                tel_in = to_text(row.get('telefono'))
+                if tel_in != '':
+                    alumno.telefono = tel_in
+                dom_in = to_text(row.get('domicilio'))
+                if dom_in != '':
+                    alumno.domicilio = dom_in
+                car_in = to_text(row.get('carrera'))
+                if car_in != '':
+                    alumno.carrera = car_in
+                reg_raw = row.get('esregular') or row.get('regular') or row.get('es_regular')
+                if reg_raw is not None and to_text(reg_raw) != '':
+                    alumno.esRegular = get_bool(reg_raw)
+                if fi_parsed:
+                    alumno.fecha_inscripcion = fi_parsed
+                code_in = to_text(row.get('codigo'))
+                if code_in != '':
+                    alumno.codigo = code_in
+                alumno.full_clean()
+                alumno.save()
+                updated += 1
+            else:
+                alumno = Alumnos(
+                    nombre=nombre,
+                    email=to_text(row.get('email')) or None,
+                    telefono=to_text(row.get('telefono')) or None,
+                    domicilio=to_text(row.get('domicilio')) or None,
+                    localidad=localidad,
+                    latitud=lat,
+                    longitud=lng,
+                    dni=dni_in,
+                    codigo=codigo_in,
+                    esRegular=get_bool(row.get('esregular') or row.get('regular') or row.get('es_regular')),
+                    carrera=to_text(row.get('carrera')) or None,
+                    fecha_inscripcion=fi_parsed or datetime.utcnow().date(),
+                )
+                alumno.full_clean()
+                alumno.save()
+                created += 1
         except Exception as e:
             errors.append({"row": idx, "error": str(e)})
 
@@ -394,4 +431,4 @@ def Import(request):
     else:
         return JsonResponse({"success": False, "error": "Formato no soportado. Use .csv o .xlsx"}, status=400)
 
-    return JsonResponse({"success": True, "created": created, "errors": errors})
+    return JsonResponse({"success": True, "created": created, "updated": updated, "errors": errors})

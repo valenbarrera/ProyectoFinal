@@ -263,9 +263,10 @@ class Mapa extends Component {
                                     const resp = await axios.post(api.alumnos.import, form, auth.fileFormHeader());
                                     const data = resp && resp.data ? resp.data : {};
                                     const created = typeof data.created === 'number' ? data.created : 0;
+                                    const updated = typeof data.updated === 'number' ? data.updated : 0;
                                     const errors = Array.isArray(data.errors) ? data.errors : [];
                                     this.GetDirecciones(this.state.provincia_id, this.state.localidad_id);
-                                    let msg = `Importación completada. Creados: ${created}.`;
+                                    let msg = `Importación completada. Creados: ${created}. Actualizados: ${updated}.`;
                                     if (errors.length > 0) {
                                         const sample = errors.slice(0, 3).map(e => `Fila ${e.row}: ${e.error}`).join("\n");
                                         msg += `\nErrores: ${errors.length}.` + (sample ? `\nEjemplos:\n${sample}` : '');
