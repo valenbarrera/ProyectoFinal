@@ -29,6 +29,9 @@ INSTALLED_APPS = [
     'main',
     'Locaciones',
     'Alumnos',
+    'Datos_domicilio',
+    'Datos_familiares',
+    'Datos_ocupacionales',
 ]
 
 

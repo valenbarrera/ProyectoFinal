@@ -19,13 +19,9 @@ import json, math
 from utilities import list_utils, list_reports
 
 from .models import Alumnos
-from Locaciones.models import Provincias, Localidades
-from .models import Alumnos
-from django.db.models import Exists, OuterRef
 from django.contrib.postgres.aggregates import ArrayAgg
 
 from django.utils.dateparse import parse_date
-from django.db.models import Q
 from rest_framework.parsers import MultiPartParser, FormParser
 from .services.importer import import_alumnos
 
@@ -35,24 +31,12 @@ from .services.importer import import_alumnos
 def MapList(request):
     center = None
 
-    provincia_id = request.GET.get('provincia_id')
-    localidad_id = request.GET.get('localidad_id')
     carreras_param = request.GET.get('carrera')
     regularidad = request.GET.get('regularidad', 'todos').lower()
     fecha_desde = request.GET.get('fecha_desde')
     fecha_hasta = request.GET.get('fecha_hasta')
 
     qs = Alumnos.objects.all()
-
-    if localidad_id:
-        qs = qs.filter(localidad_id=localidad_id)
-        try:
-            localidad = Localidades.objects.get(pk=localidad_id)
-            center = {"lat": localidad.latitud, "lng": localidad.longitud}
-        except Localidades.DoesNotExist:
-            pass
-    elif provincia_id:
-        qs = qs.filter(localidad__provincia_id=provincia_id)
 
     if carreras_param and carreras_param.lower() != 'todos':
         carreras = [c.strip() for c in carreras_param.split(',') if c.strip()]
@@ -79,10 +63,17 @@ def MapList(request):
         qs.order_by('nombre').values(
             'pk',
             'nombre',
-            'latitud',
-            'longitud',
-            'domicilio',
-            'localidad_id',
+            'apellido',
+            'genero',
+            'pais_documento',
+            'tipo_documento',
+            'nro_documento',
+            'nacionalidad',
+            'cuil',
+            'pueblos_originarios',
+            'obra_social',
+            'telefono',
+            'email',
             'carrera',
             'esRegular',
             'fecha_inscripcion',

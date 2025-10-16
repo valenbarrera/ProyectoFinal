@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^', include('main.urls')),
     url(r'^', include('Alumnos.urls')),
     url(r'^', include('Locaciones.urls')),
+    url(r'^', include('Datos_domicilio.urls')),
+    url(r'^', include('Datos_ocupacionales.urls')),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
