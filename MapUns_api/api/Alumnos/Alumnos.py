@@ -29,7 +29,7 @@ from django.db.models import Q
 from rest_framework.parsers import MultiPartParser, FormParser
 import csv
 import io
-from datetime import datetime
+from datetime import datetime, date
 
 @api_view(['GET'])
 @authentication_classes((TokenAuthentication, BasicAuthentication))
@@ -205,6 +205,21 @@ def Import(request):
     created = 0
     errors = []
 
+    def to_text(val):
+        if val is None:
+            return ''
+        try:
+            # Excel often sends floats for numeric-looking cells
+            if isinstance(val, float):
+                if val.is_integer():
+                    val = int(val)
+            return str(val).strip()
+        except Exception:
+            try:
+                return unicode(val).strip()  # py2 safety if needed
+            except Exception:
+                return ''
+
     def get_bool(val):
         if val is None:
             return False
@@ -214,6 +229,8 @@ def Import(request):
     def parse_date_safe(val):
         if not val:
             return None
+        if isinstance(val, (datetime, date)):
+            return val.date() if isinstance(val, datetime) else val
         for fmt in ('%Y-%m-%d', '%d/%m/%Y', '%Y/%m/%d'):
             try:
                 return datetime.strptime(str(val).strip(), fmt).date()
@@ -222,9 +239,11 @@ def Import(request):
         return None
 
     def resolve_localidad(row):
-        loc_id = row.get('localidad_id') or row.get('localidadid')
+        loc_id = row.get('localidad_id') or row.get('localidadid') or row.get('localidad id') or row.get('id_localidad') or row.get('id localidad') or row.get('localidad_pk')
         if loc_id:
             try:
+                if isinstance(loc_id, float):
+                    loc_id = int(loc_id)
                 return Localidades.objects.get(pk=int(loc_id))
             except Exception:
                 return None
@@ -232,25 +251,43 @@ def Import(request):
         if not nombre:
             return None
         prov = row.get('provincia')
-        qs = Localidades.objects.filter(nombre__iexact=nombre.strip())
-        if prov:
-            qs = qs.filter(provincia__nombre__iexact=prov.strip())
+        prov_id = row.get('provincia_id') or row.get('id_provincia') or row.get('provincia id')
+        qs = Localidades.objects.filter(nombre__iexact=to_text(nombre))
+        if prov_id:
+            try:
+                qs = qs.filter(provincia_id=int(prov_id))
+            except Exception:
+                pass
+        elif prov:
+            qs = qs.filter(provincia__nombre__iexact=to_text(prov))
         return qs.first()
 
     def upsert_row(row, idx):
         nonlocal created
         try:
-            nombre = (row.get('nombre') or '').strip()
+            nombre = to_text(row.get('nombre'))
             if not nombre:
                 raise ValueError('Falta nombre')
+
+            # normalizar aliases comunes
+            if 'latitud' not in row and 'lat' in row:
+                row['latitud'] = row.get('lat')
+            if 'longitud' not in row and ('lng' in row or 'long' in row or 'longitude' in row):
+                row['longitud'] = row.get('lng') or row.get('long') or row.get('longitude')
 
             lat = row.get('latitud'); lng = row.get('longitud')
             if lat in (None, '') or lng in (None, ''):
                 raise ValueError('Falta latitud/longitud')
 
             try:
-                lat = float(str(lat).replace(',', '.'))
-                lng = float(str(lng).replace(',', '.'))
+                if isinstance(lat, (int, float)):
+                    lat = float(lat)
+                else:
+                    lat = float(str(lat).replace(',', '.'))
+                if isinstance(lng, (int, float)):
+                    lng = float(lng)
+                else:
+                    lng = float(str(lng).replace(',', '.'))
             except Exception:
                 raise ValueError('Lat/Lon inválidos')
 
@@ -258,23 +295,26 @@ def Import(request):
             if not localidad:
                 raise ValueError('Localidad no encontrada')
 
-            codigo = (row.get('codigo') or '').strip()
+            codigo = to_text(row.get('codigo'))
             if not codigo:
-                codigo = (row.get('dni') or '').strip()[:8] or (datetime.utcnow().strftime('%y%m%d%H'))
+                dni_text = to_text(row.get('dni'))
+                codigo = (dni_text[:8] if dni_text else '') or (datetime.utcnow().strftime('%y%m%d%H'))
+
+            fi_raw = row.get('fecha_inscripcion') or row.get('fecha') or row.get('fecha inscripcion') or row.get('fecha_de_inscripcion')
 
             alumno = Alumnos(
                 nombre=nombre,
-                email=(row.get('email') or '').strip() or None,
-                telefono=(row.get('telefono') or '').strip() or None,
-                domicilio=(row.get('domicilio') or '').strip() or None,
+                email=to_text(row.get('email')) or None,
+                telefono=to_text(row.get('telefono')) or None,
+                domicilio=to_text(row.get('domicilio')) or None,
                 localidad=localidad,
                 latitud=lat,
                 longitud=lng,
-                dni=(row.get('dni') or '').strip() or None,
+                dni=to_text(row.get('dni')) or None,
                 codigo=codigo,
-                esRegular=get_bool(row.get('esregular')),
-                carrera=(row.get('carrera') or '').strip() or None,
-                fecha_inscripcion=parse_date_safe(row.get('fecha_inscripcion')) or datetime.utcnow().date(),
+                esRegular=get_bool(row.get('esregular') or row.get('regular') or row.get('es_regular')),
+                carrera=to_text(row.get('carrera')) or None,
+                fecha_inscripcion=parse_date_safe(fi_raw) or datetime.utcnow().date(),
             )
             alumno.full_clean()
             alumno.save()
@@ -294,20 +334,63 @@ def Import(request):
             row_norm = { (k or '').strip().lower(): (v if v is not None else '') for k, v in row.items() }
             upsert_row(row_norm, idx)
     elif name.endswith('.xlsx'):
+        # Leer contenido una sola vez para evitar problemas de puntero en fallbacks
+        try:
+            content = upload.read()
+        except Exception:
+            content = None
+
+        # Intentar con openpyxl (preferido)
         try:
             import openpyxl  # type: ignore
+            if content is None:
+                # Como último recurso, re-lee del archivo
+                content = upload.read()
+            wb = openpyxl.load_workbook(io.BytesIO(content), read_only=True, data_only=True)
+            processed = False
+            for ws in wb.worksheets:
+                headers = []
+                rows_iter = ws.iter_rows(values_only=True)
+                try:
+                    first = next(rows_iter)
+                except StopIteration:
+                    continue
+                headers = [str(c or '').strip().lower() for c in first]
+                if not any(headers):
+                    continue
+                for i, row in enumerate(rows_iter, start=2):
+                    values = [c if c is not None else '' for c in row]
+                    row_norm = { headers[j]: values[j] if j < len(values) else '' for j in range(len(headers)) }
+                    upsert_row(row_norm, i)
+                processed = True
+                break
+            if not processed:
+                raise Exception('XLSX vacío o sin encabezados válidos')
         except Exception:
-            return JsonResponse({"success": False, "error": "Para XLSX instale 'openpyxl' o suba un CSV."}, status=400)
-        wb = openpyxl.load_workbook(upload, read_only=True)
-        ws = wb.active
-        headers = []
-        for i, row in enumerate(ws.iter_rows(values_only=True), start=1):
-            if i == 1:
-                headers = [str(c or '').strip().lower() for c in row]
-            else:
-                values = [c if c is not None else '' for c in row]
-                row_norm = { headers[j]: values[j] if j < len(values) else '' for j in range(len(headers)) }
-                upsert_row(row_norm, i)
+            # Fallback a xlrd 1.2.0
+            try:
+                import xlrd  # type: ignore
+                if content is None:
+                    content = upload.read()
+                wb = xlrd.open_workbook(file_contents=content)
+                processed = False
+                for si in range(wb.nsheets):
+                    sheet = wb.sheet_by_index(si)
+                    if sheet.nrows < 2:
+                        continue
+                    headers = [str(sheet.cell_value(0, c) or '').strip().lower() for c in range(sheet.ncols)]
+                    if not any(headers):
+                        continue
+                    for r in range(1, sheet.nrows):
+                        values = [sheet.cell_value(r, c) for c in range(sheet.ncols)]
+                        row_norm = { headers[j]: (values[j] if j < len(values) else '') for j in range(len(headers)) }
+                        upsert_row(row_norm, r+1)
+                    processed = True
+                    break
+                if not processed:
+                    raise Exception('XLSX vacío o sin encabezados válidos')
+            except Exception:
+                return JsonResponse({"success": False, "error": "No se pudo leer XLSX. Instale openpyxl (sugerido) o xlrd==1.2.0, o suba un CSV."}, status=400)
     else:
         return JsonResponse({"success": False, "error": "Formato no soportado. Use .csv o .xlsx"}, status=400)
 

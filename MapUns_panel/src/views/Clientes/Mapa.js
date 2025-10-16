@@ -260,9 +260,17 @@ class Mapa extends Component {
                                 try {
                                     const form = new FormData();
                                     form.append('file', file);
-                                    await axios.post(api.alumnos.import, form, auth.fileFormHeader());
+                                    const resp = await axios.post(api.alumnos.import, form, auth.fileFormHeader());
+                                    const data = resp && resp.data ? resp.data : {};
+                                    const created = typeof data.created === 'number' ? data.created : 0;
+                                    const errors = Array.isArray(data.errors) ? data.errors : [];
                                     this.GetDirecciones(this.state.provincia_id, this.state.localidad_id);
-                                    alert('Importación completada');
+                                    let msg = `Importación completada. Creados: ${created}.`;
+                                    if (errors.length > 0) {
+                                        const sample = errors.slice(0, 3).map(e => `Fila ${e.row}: ${e.error}`).join("\n");
+                                        msg += `\nErrores: ${errors.length}.` + (sample ? `\nEjemplos:\n${sample}` : '');
+                                    }
+                                    alert(msg);
                                 } catch (err) {
                                     const msg = (err && err.response && err.response.data && (err.response.data.error || err.response.data.detail)) || 'Error al importar';
                                     alert(msg);
