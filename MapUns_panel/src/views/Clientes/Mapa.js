@@ -326,7 +326,7 @@ class Mapa extends Component {
                 </Row>
                 <div style={{ position: 'fixed', right: 16, bottom: 56, zIndex: 1000 }}>
                     <div style={{ background: 'rgba(0,0,0,0.6)', borderRadius: 6, padding: 8 }}>
-                        <DisplayToggle value={this.state.ubicacionTipo} onChange={this.handleUbicacionChange} disableEstudio={true} />
+                        <DisplayToggle value={this.state.ubicacionTipo} onChange={this.handleUbicacionChange} disableEstudio={false} />
                     </div>
                 </div>
             </div>
