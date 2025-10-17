@@ -19,6 +19,9 @@ import json, math
 from utilities import list_utils, list_reports
 
 from .models import Alumnos
+from Datos_domicilio.models import Datos_domicilio
+from django.db.models import F, Value
+from django.db.models.functions import Concat
 from Locaciones.models import Localidades
 from Datos_domicilio.models import Datos_domicilio
 from django.contrib.postgres.aggregates import ArrayAgg
@@ -128,7 +131,18 @@ def MapList(request):
 @permission_classes((IsAuthenticated,))
 def List(request):
     obj_data = json.loads(request.GET.get('data'))
-    db_query = Alumnos.objects.all().order_by('nombre')
+    # Listado basado en Datos_domicilio (procedencia) + alumno y localidad
+    db_query = (
+        Datos_domicilio.objects.select_related('alumno', 'localidad_procedencia__provincia')
+        .annotate(
+            nombre=F('alumno__nombre'),
+            apellido=F('alumno__apellido'),
+            domicilio=Concat(F('calle_procedencia'), Value(' '), F('nro_procedencia')),
+            localidad_nombre=F('localidad_procedencia__nombre'),
+            provincia_nombre=F('localidad_procedencia__provincia__nombre'),
+        )
+        .order_by('alumno__apellido', 'alumno__nombre')
+    )
     return list_utils.obj_tables_default(db_query, obj_data)
 
 @api_view(['GET'])
