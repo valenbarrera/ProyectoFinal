@@ -84,17 +84,24 @@ class Mapa extends Component {
         axios.get(url, auth.header())
             .then(function (response) {
                 const rows = response.data.rows || [];
-                self.setState({
-                    direcciones: rows,
-                    center: response.data.center,
-                });
+                if (self._isMounted) {
+                    self.setState({
+                        direcciones: rows,
+                        center: response.data.center,
+                    });
+                }
             });
     }
 
 
     componentDidMount() {
+        this._isMounted = true;
         this.GetDirecciones(this.state.provincia_id, this.state.localidad_id);
         this.FetchCarrerasOptions();
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     FetchCarrerasOptions() {
@@ -106,7 +113,9 @@ class Mapa extends Component {
                     .map(r => r.carrera)
                     .filter(Boolean)))
                     .sort();
-                self.setState({ carrerasOptions: carreras });
+                if (self._isMounted) {
+                    self.setState({ carrerasOptions: carreras });
+                }
             });
     }
 
@@ -195,7 +204,9 @@ class Mapa extends Component {
 
     render() {
         const { data, pages, loading } = this.state;
-        var markers = this.state.direcciones.map(x => ({
+        var markers = this.state.direcciones
+            .filter(x => !isNaN(parseFloat(x.latitud)) && !isNaN(parseFloat(x.longitud)))
+            .map(x => ({
             isOpen: false,
             position: { lat: parseFloat(x.latitud), lng: parseFloat(x.longitud) },
             domicilio: x.domicilio,

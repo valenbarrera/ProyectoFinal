@@ -19,6 +19,8 @@ import json, math
 from utilities import list_utils, list_reports
 
 from .models import Alumnos
+from Locaciones.models import Localidades
+from Datos_domicilio.models import Datos_domicilio
 from django.contrib.postgres.aggregates import ArrayAgg
 
 from django.utils.dateparse import parse_date
@@ -29,56 +31,94 @@ from .services.importer import import_alumnos
 @authentication_classes((TokenAuthentication, BasicAuthentication))
 @permission_classes((IsAuthenticated,))
 def MapList(request):
+    """
+    Devuelve puntos del mapa cruzando Alumnos con Datos_domicilio.
+    Usa coordenadas de procedencia o estudio según `ubicacion`.
+    Aplica filtros por provincia/localidad sobre la localidad correspondiente,
+    y por carrera, regularidad y fechas sobre Alumnos.
+    """
     center = None
 
+    provincia_id = request.GET.get('provincia_id')
+    localidad_id = request.GET.get('localidad_id')
     carreras_param = request.GET.get('carrera')
     regularidad = request.GET.get('regularidad', 'todos').lower()
     fecha_desde = request.GET.get('fecha_desde')
     fecha_hasta = request.GET.get('fecha_hasta')
+    ubicacion = (request.GET.get('ubicacion') or 'procedencia').lower()
 
-    qs = Alumnos.objects.all()
+    # Mapeo de campos por tipo de ubicación
+    if ubicacion == 'estudio':
+        lat_field = 'lat_estudio'
+        lon_field = 'long_estudio'
+        loc_field = 'localidad_estudio'
+        calle_field = 'calle_estudio'
+        nro_field = 'nro_estudio'
+    else:
+        lat_field = 'lat_procedencia'
+        lon_field = 'long_procedencia'
+        loc_field = 'localidad_procedencia'
+        calle_field = 'calle_procedencia'
+        nro_field = 'nro_procedencia'
 
+    qs = Datos_domicilio.objects.select_related('alumno')
+
+    # Filtros geográficos
+    if localidad_id:
+        qs = qs.filter(**{f'{loc_field}_id': localidad_id})
+        try:
+            loc = Localidades.objects.get(pk=localidad_id)
+            center = {"lat": loc.latitud, "lng": loc.longitud}
+        except Localidades.DoesNotExist:
+            pass
+    elif provincia_id:
+        qs = qs.filter(**{f'{loc_field}__provincia_id': provincia_id})
+
+    # Filtros de alumno
     if carreras_param and carreras_param.lower() != 'todos':
         carreras = [c.strip() for c in carreras_param.split(',') if c.strip()]
         if carreras:
-            q_filter = Q()
+            qf = Q()
             for c in carreras:
-                q_filter |= Q(carrera__icontains=c)
-            qs = qs.filter(q_filter)
+                qf |= Q(alumno__carrera__icontains=c)
+            qs = qs.filter(qf)
 
     if regularidad in ('regulares', 'regular', 'si', 'true', '1'):
-        qs = qs.filter(esRegular=True)
+        qs = qs.filter(alumno__esRegular=True)
     elif regularidad in ('noregulares', 'no_regulares', 'no', 'false', '0'):
-        qs = qs.filter(esRegular=False)
+        qs = qs.filter(alumno__esRegular=False)
 
     d_from = parse_date(fecha_desde) if fecha_desde and fecha_desde != 'todos' else None
     d_to   = parse_date(fecha_hasta) if fecha_hasta and fecha_hasta != 'todos' else None
-
     if d_from:
-        qs = qs.filter(fecha_inscripcion__gte=d_from)
+        qs = qs.filter(alumno__fecha_inscripcion__gte=d_from)
     if d_to:
-        qs = qs.filter(fecha_inscripcion__lte=d_to)
+        qs = qs.filter(alumno__fecha_inscripcion__lte=d_to)
 
-    rows = list(
-        qs.order_by('nombre').values(
-            'pk',
-            'nombre',
-            'apellido',
-            'genero',
-            'pais_documento',
-            'tipo_documento',
-            'nro_documento',
-            'nacionalidad',
-            'cuil',
-            'pueblos_originarios',
-            'obra_social',
-            'telefono',
-            'email',
-            'carrera',
-            'esRegular',
-            'fecha_inscripcion',
-        )
-    )
+    # Construir filas
+    rows = []
+    for d in qs:
+        lat = getattr(d, lat_field, 0) or 0
+        lon = getattr(d, lon_field, 0) or 0
+        try:
+            latf = float(lat)
+            lonf = float(lon)
+        except Exception:
+            continue
+        if latf == 0 and lonf == 0:
+            continue
+        domicilio_txt = (f"{getattr(d, calle_field, '')} {getattr(d, nro_field, '')}").strip()
+        rows.append({
+            'pk': d.alumno.pk,
+            'nombre': d.alumno.nombre,
+            'latitud': latf,
+            'longitud': lonf,
+            'domicilio': domicilio_txt,
+            'localidad_id': getattr(d, f'{loc_field}_id'),
+            'carrera': d.alumno.carrera,
+            'esRegular': d.alumno.esRegular,
+            'fecha_inscripcion': d.alumno.fecha_inscripcion,
+        })
 
     return JsonResponse({"rows": rows, "center": center})
 

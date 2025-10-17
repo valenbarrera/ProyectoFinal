@@ -23,14 +23,17 @@ def ExistePermiso(str_nombre):
         return False
 
 def ListaPermisos(obj_user):
-    perfil = Perfil.objects.get(user_id = obj_user.pk)
-    ar_permisos = []
+    # Si es superusuario, devolver todos los permisos sin requerir Perfil
     if obj_user.is_superuser:
-        ar_permisos = [obj_permiso['nombre'] for obj_permiso in Permiso.objects.values("nombre")]        
-        ar_permisos.append('superadmin')
-    else:
-        ar_permisos = perfil.GetPermisos()    
-    return ar_permisos
+        ar = [obj_permiso['nombre'] for obj_permiso in Permiso.objects.values("nombre")]
+        ar.append('superadmin')
+        return ar
+    # Para usuarios comunes, intentar obtener Perfil; si no existe, devolver lista vacía
+    try:
+        perfil = Perfil.objects.get(user_id=obj_user.pk)
+    except Perfil.DoesNotExist:
+        return []
+    return perfil.GetPermisos()
 
 def CheckPermisos(str_nombre):
     def _method_wrapper(view_method):

@@ -179,13 +179,17 @@ def Login(request):
             dict_errors["password"] = "Este campo es requerido."
         
         if len(dict_errors) == 0:
-            try:
-                obj_user = authenticate(username = str_username, password = str_password)
-                token, created = Token.objects.get_or_create(user = obj_user)
-                return JsonResponse({"success": True, "token": token.key, "permisos": ListaPermisos(obj_user), "display": str(obj_user.perfil)})
-            except:
+            obj_user = authenticate(username=str_username, password=str_password)
+            if not obj_user:
                 dict_errors["global"] = "El usuario y/o la contraseña son incorrectos."
-                return JsonResponse({"success": False, "errors": dict_errors})    
+                return JsonResponse({"success": False, "errors": dict_errors})
+            token, created = Token.objects.get_or_create(user=obj_user)
+            # Mostrar un display amigable aunque no tenga Perfil
+            try:
+                display = str(obj_user.perfil)
+            except Exception:
+                display = (obj_user.get_full_name() or obj_user.username)
+            return JsonResponse({"success": True, "token": token.key, "permisos": ListaPermisos(obj_user), "display": display})
         else:
             return JsonResponse({"success": False, "errors": dict_errors})
     else:
