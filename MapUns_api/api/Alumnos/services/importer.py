@@ -16,8 +16,11 @@ try:
 except Exception:  # pragma: no cover
     xlrd = None
 
-from Locaciones.models import Localidades
+from Locaciones.models import Localidades, Provincias
 from ..models import Alumnos
+from Datos_domicilio.models import Datos_domicilio
+from Datos_familiares.models import Datos_familiares
+from Datos_ocupacionales.models import Datos_ocupacionales
 
 
 def to_text(val):
@@ -54,6 +57,37 @@ def parse_date_safe(val):
     return None
 
 
+def ensure_provincia(nombre):
+    # Si no viene provincia, usar un placeholder 'N/D'
+    name = to_text(nombre) or 'N/D'
+    prov = Provincias.objects.filter(nombre__iexact=name).first()
+    if prov:
+        return prov
+    prov = Provincias(nombre=name, latitud=0, longitud=0)
+    prov.full_clean()
+    prov.save()
+    return prov
+
+
+def ensure_localidad_by_names(localidad_nombre, provincia_nombre):
+    ln = to_text(localidad_nombre)
+    pn = to_text(provincia_nombre)
+    if not ln:
+        return None
+    qs = Localidades.objects.filter(nombre__iexact=ln)
+    if pn:
+        qs = qs.filter(provincia__nombre__iexact=pn)
+    loc = qs.first()
+    if loc:
+        return loc
+    # Crear provincia (usa 'N/D' si pn vacío) y luego la localidad
+    prov = ensure_provincia(pn)
+    loc = Localidades(nombre=ln, provincia=prov)
+    loc.full_clean()
+    loc.save()
+    return loc
+
+
 def resolve_localidad(row):
     loc_id = (
         row.get('localidad_id') or row.get('localidadid') or row.get('localidad id') or
@@ -84,86 +118,135 @@ def resolve_localidad(row):
 
 def _upsert_row(row, counters, errors):
     try:
+        # Campos de alumno
         nombre = to_text(row.get('nombre'))
-        if not nombre:
-            raise ValueError('Falta nombre')
+        apellido = to_text(row.get('apellido'))
+        if not (nombre and apellido):
+            raise ValueError('Falta nombre o apellido')
 
-        # normalizar lat/lon
-        if 'latitud' not in row and 'lat' in row:
-            row['latitud'] = row.get('lat')
-        if 'longitud' not in row and (row.get('lng') or row.get('long') or row.get('longitude')):
-            row['longitud'] = row.get('lng') or row.get('long') or row.get('longitude')
+        nro_documento = to_text(row.get('nro_documento'))
+        if not nro_documento:
+            raise ValueError('Falta nro_documento')
 
-        lat = row.get('latitud'); lng = row.get('longitud')
-        if lat in (None, '') or lng in (None, ''):
-            raise ValueError('Falta latitud/longitud')
-
-        try:
-            lat = float(lat) if isinstance(lat, (int, float)) else float(to_text(lat).replace(',', '.'))
-            lng = float(lng) if isinstance(lng, (int, float)) else float(to_text(lng).replace(',', '.'))
-        except Exception:
-            raise ValueError('Lat/Lon inválidos')
-
-        localidad = resolve_localidad(row)
-        if not localidad:
-            raise ValueError('Localidad no encontrada')
-
-        dni_in = to_text(row.get('dni')) or None
-        codigo_in = to_text(row.get('codigo'))
-        if not codigo_in:
-            codigo_in = (dni_in[:8] if dni_in else '') or (timezone.now().strftime('%y%m%d%H'))
-
-        fi_raw = row.get('fecha_inscripcion') or row.get('fecha') or row.get('fecha inscripcion') or row.get('fecha_de_inscripcion')
+        genero = to_text(row.get('género') or row.get('genero'))
+        pais_documento = to_text(row.get('pais_documento'))
+        tipo_documento = to_text(row.get('tipo_documento'))
+        nacionalidad = to_text(row.get('nacionalidad'))
+        cuil = to_text(row.get('cuil'))
+        pueblos_originarios = to_text(row.get('pueblos_originarios'))
+        obra_social = to_text(row.get('obra_social'))
+        telefono = to_text(row.get('telefono'))
+        email = to_text(row.get('email'))
+        carrera = to_text(row.get('carrera'))
+        esRegular = get_bool(row.get('esregular') or row.get('es_regular'))
+        fi_raw = row.get('fecha_inscripcion') or row.get('fecha') or row.get('fecha inscripcion')
         fi_parsed = parse_date_safe(fi_raw) or timezone.now().date()
 
-        # Upsert por DNI
-        alumno = Alumnos.objects.filter(dni=dni_in).first() if dni_in else None
+        # Upsert Alumno por nro_documento
+        alumno = Alumnos.objects.filter(nro_documento=nro_documento).first()
         if alumno:
             alumno.nombre = nombre
-            alumno.latitud = lat
-            alumno.longitud = lng
-            alumno.localidad = localidad
-            email_in = to_text(row.get('email'))
-            if email_in != '':
-                alumno.email = email_in
-            tel_in = to_text(row.get('telefono'))
-            if tel_in != '':
-                alumno.telefono = tel_in
-            dom_in = to_text(row.get('domicilio'))
-            if dom_in != '':
-                alumno.domicilio = dom_in
-            car_in = to_text(row.get('carrera'))
-            if car_in != '':
-                alumno.carrera = car_in
-            reg_raw = row.get('esregular') or row.get('regular') or row.get('es_regular')
-            if to_text(reg_raw) != '':
-                alumno.esRegular = get_bool(reg_raw)
-            if fi_parsed:
-                alumno.fecha_inscripcion = fi_parsed
-            code_in = to_text(row.get('codigo'))
-            if code_in != '':
-                alumno.codigo = code_in
+            alumno.apellido = apellido
+            alumno.genero = genero
+            alumno.pais_documento = pais_documento
+            alumno.tipo_documento = tipo_documento
+            alumno.nro_documento = nro_documento
+            alumno.nacionalidad = nacionalidad
+            alumno.cuil = cuil
+            alumno.pueblos_originarios = pueblos_originarios
+            alumno.obra_social = obra_social
+            alumno.telefono = telefono
+            alumno.email = email
+            alumno.esRegular = esRegular
+            alumno.carrera = carrera
+            alumno.fecha_inscripcion = fi_parsed
             alumno.full_clean()
             alumno.save()
             counters['updated'] += 1
         else:
             alumno = Alumnos(
                 nombre=nombre,
-                email=to_text(row.get('email')) or None,
-                telefono=to_text(row.get('telefono')) or None,
-                domicilio=to_text(row.get('domicilio')) or None,
-                localidad=localidad,
-                latitud=lat,
-                longitud=lng,
-                dni=dni_in,
-                codigo=codigo_in,
-                esRegular=get_bool(row.get('esregular') or row.get('regular') or row.get('es_regular')),
-                carrera=to_text(row.get('carrera')) or None,
+                apellido=apellido,
+                genero=genero,
+                pais_documento=pais_documento,
+                tipo_documento=tipo_documento,
+                nro_documento=nro_documento,
+                nacionalidad=nacionalidad,
+                cuil=cuil,
+                pueblos_originarios=pueblos_originarios,
+                obra_social=obra_social,
+                telefono=telefono,
+                email=email,
+                codigo=timezone.now().strftime('%y%m%d%H%M%S'),
+                esRegular=esRegular,
+                carrera=carrera,
                 fecha_inscripcion=fi_parsed,
             )
             alumno.full_clean()
             alumno.save()
             counters['created'] += 1
+
+        # Domicilios (procedencia y estudio)
+        loc_proc = ensure_localidad_by_names(row.get('localidad_procedencia'), row.get('provincia_procedencia'))
+        loc_est = ensure_localidad_by_names(row.get('localidad_estudio'), row.get('provincia_estudio'))
+        def to_float(v):
+            if v in (None, ''):
+                return 0.0
+            try:
+                return float(v) if isinstance(v, (int, float)) else float(to_text(v).replace(',', '.'))
+            except Exception:
+                return 0.0
+        # Evitar get_or_create para no guardar con FKs obligatorias vacías
+        dom = Datos_domicilio.objects.filter(alumno=alumno).first()
+        if dom is None:
+            dom = Datos_domicilio(alumno=alumno)
+        dom.calle_procedencia = to_text(row.get('calle_procedencia')) or 'N/D'
+        dom.nro_procedencia = to_text(row.get('nro_procedencia')) or 'S/N'
+        dom.lat_procedencia = to_float(row.get('lat_procedencia'))
+        dom.long_procedencia = to_float(row.get('long_procedencia'))
+        if loc_proc:
+            dom.localidad_procedencia = loc_proc
+        dom.calle_estudio = to_text(row.get('calle_estudio')) or 'N/D'
+        dom.nro_estudio = to_text(row.get('nro_estudio')) or 'S/N'
+        dom.lat_estudio = to_float(row.get('lat_estudio'))
+        dom.long_estudio = to_float(row.get('long_estudio'))
+        if loc_est:
+            dom.localidad_estudio = loc_est
+        dom.full_clean()
+        dom.save()
+
+        # Datos familiares
+        fam = Datos_familiares.objects.filter(alumno=alumno).first()
+        if fam is None:
+            fam = Datos_familiares(alumno=alumno)
+        fam.estado_civil = to_text(row.get('estado_civil')) or 'N/D'
+        try:
+            fam.cant_hijos = int(float(row.get('cant_hijos'))) if row.get('cant_hijos') not in (None, '') else 0
+        except Exception:
+            fam.cant_hijos = 0
+        fam.nombre_padre = to_text(row.get('nombre_padre')) or 'N/D'
+        fam.apellido_padre = to_text(row.get('apellido_padre')) or 'N/D'
+        fam.vive_padre = get_bool(row.get('vive_padre'))
+        fam.nivel_estudio_padre = to_text(row.get('nivel_estudio_padre')) or 'N/D'
+        fam.nombre_madre = to_text(row.get('nombre_madre')) or 'N/D'
+        fam.apellido_madre = to_text(row.get('apellido_madre')) or 'N/D'
+        fam.vive_madre = get_bool(row.get('vive_madre'))
+        fam.nivel_estudio_madre = to_text(row.get('nivel_estudio_madre')) or 'N/D'
+        fam.full_clean()
+        fam.save()
+
+        # Datos ocupacionales
+        ocu = Datos_ocupacionales.objects.filter(alumno=alumno).first()
+        if ocu is None:
+            ocu = Datos_ocupacionales(alumno=alumno)
+        ocu.colegio_secundario = to_text(row.get('colegio_secundario')) or 'N/D'
+        try:
+            ocu.anio_egreso_secundario = int(float(row.get('anio_egreso_secundario'))) if row.get('anio_egreso_secundario') not in (None, '') else 0
+        except Exception:
+            ocu.anio_egreso_secundario = 0
+        ocu.condicion_laboral = to_text(row.get('condicion_laboral')) or 'N/D'
+        ocu.full_clean()
+        ocu.save()
     except Exception as e:
         # Se espera que 'row' tenga una clave especial '_row_index' para reporte
         errors.append({"row": row.get('_row_index'), "error": str(e)})
@@ -246,4 +329,3 @@ def import_alumnos(upload):
         return {"created": 0, "updated": 0, "errors": [{"row": 0, "error": "No se pudo leer XLSX. Instale openpyxl (sugerido) o xlrd==1.2.0, o suba un CSV."}]}
 
     return {"created": 0, "updated": 0, "errors": [{"row": 0, "error": "Formato no soportado"}]}
-
