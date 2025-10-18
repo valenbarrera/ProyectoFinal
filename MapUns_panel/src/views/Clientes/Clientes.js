@@ -25,6 +25,34 @@ class Ejemplo extends Component {
                     id: "nombre",
                     accessor: "nombre",
                     show: true,
+                    Cell: (cell) => (
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <span
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    const pk = cell && cell.original ? cell.original.pk : null;
+                                    if (pk) window.location.hash = `#/alumnos/${pk}`;
+                                }}
+                                title="Ver detalle"
+                                style={{
+                                    display: 'inline-block',
+                                    width: 16,
+                                    height: 16,
+                                    lineHeight: '16px',
+                                    textAlign: 'center',
+                                    borderRadius: 8,
+                                    background: '#2b4464',
+                                    color: '#fff',
+                                    fontSize: 10,
+                                    marginRight: 6,
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                +
+                            </span>
+                            <span>{cell.value}</span>
+                        </div>
+                    ),
                 },
                 {
                     Header: <div style={{ textAlign: 'center' }}>Apellido</div>,
@@ -63,13 +91,16 @@ class Ejemplo extends Component {
         const { data, pages, loading } = this.state;
         return (
             <UnsTable
-                buttons={[
-                    {
-                        detail: true,
-                        component: Detail,
-                        permission: 'ejemplo_detail',
-                    },
-                ]}
+                buttons={[]}
+                onRowDoubleClick={(row) => {
+                    if (row && row.pk) {
+                        if (this.props && this.props.history && this.props.history.push) {
+                            this.props.history.push(`/alumnos/${row.pk}`);
+                        } else {
+                            window.location.hash = `#/alumnos/${row.pk}`;
+                        }
+                    }
+                }}
                 apiUrl={api.alumnos.list}
                 columns={this.state.columns}
                 exportUrl={api.alumnos.export}

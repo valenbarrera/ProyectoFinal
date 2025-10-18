@@ -246,11 +246,11 @@ class Mapa extends Component {
                     {this.state.ubicacionTipo === 'procedencia' && (
                         <React.Fragment>
                             <div className="col-12 col-md-6 col-lg-4">
-                                <UnsLabeledInput label={<span style={{ color: 'white' }}>Provincia</span>} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker key={"prov_" + (this.state.provincia_id || "none")} onChange={(data) => this.onChangeProvincia(data)} fieldName={"provincia_id"} url={api.locaciones.provincias.select}
+                                <UnsLabeledInput label={"Provincia"} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker key={"prov_" + (this.state.provincia_id || "none")} onChange={(data) => this.onChangeProvincia(data)} fieldName={"provincia_id"} url={api.locaciones.provincias.select}
                                     nombreField={"nombre"} pkField={"id"} value={this.state.provincia_id} narrowToPkOnLoad={false} />} />
                             </div>
                             <div className="col-12 col-md-6 col-lg-4">
-                                <UnsLabeledInput label={<span style={{ color: 'white' }}>Localidad</span>} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker key={"loc_" + (this.state.provincia_id || "none")} onChange={(data) => this.onChangeLocalidad(data)}
+                                <UnsLabeledInput label={"Localidad"} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker key={"loc_" + (this.state.provincia_id || "none")} onChange={(data) => this.onChangeLocalidad(data)}
                                     disabled={!this.state.provincia_id}
                                     fieldName={"localidad_id"}
                                     url={api.locaciones.localidades.select + (this.state.provincia_id ? ("?provincia_id=" + this.state.provincia_id + "&provincia=" + this.state.provincia_id + "&provincia__id=" + this.state.provincia_id + "&provincia_id__exact=" + this.state.provincia_id) : "")}

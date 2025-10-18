@@ -347,8 +347,9 @@ class UnsTable extends Component {
     render() {
         const { data, pages, loading } = this.state;
         var toolbarButtons = [];
-        for (var i = 0; i < this.props.buttons.length; i++) {
-            var button = this.props.buttons[i];
+        const buttons = this.props.buttons || [];
+        for (var i = 0; i < buttons.length; i++) {
+            var button = buttons[i];
             var addButton = false;
             if (button.permission != undefined) {
                 if (auth.hasPermission(button.permission)) addButton = true;
