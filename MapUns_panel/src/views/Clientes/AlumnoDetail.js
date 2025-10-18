@@ -26,7 +26,7 @@ class AlumnoDetail extends Component {
   }
 
   Field = ({ label, value }) => (
-    <Col md={6} className="mb-2">
+    <Col md={6} className="mb-2 text-white">
       <strong>{label}:</strong> <span>{(value !== null && value !== undefined && value !== '') ? String(value) : '-'}</span>
     </Col>
   );
@@ -48,62 +48,68 @@ class AlumnoDetail extends Component {
               <Field label="Nombre" value={data.nombre} />
               <Field label="Apellido" value={data.apellido} />
               <Field label="Género" value={data.genero} />
-              <Field label="País doc." value={data.pais_documento} />
-              <Field label="Tipo doc." value={data.tipo_documento} />
-              <Field label="Nro documento" value={data.nro_documento} />
+              <Field label="País emisor del documento" value={data.pais_documento} />
+              <Field label="Tipo de documento" value={data.tipo_documento} />
+              <Field label="Número de documento" value={data.nro_documento} />
               <Field label="Nacionalidad" value={data.nacionalidad} />
-              <Field label="CUIL" value={data.cuil} />
-              <Field label="Pueblos originarios" value={data.pueblos_originarios} />
-              <Field label="Obra social" value={data.obra_social} />
+              <Field label="Número de CUIL" value={data.cuil} />
+              <Field label="Pertenece a Pueblos Originarios" value={data.pueblos_originarios} />
+              <Field label="Cobertura de Salud" value={data.obra_social} />
               <Field label="Teléfono" value={data.telefono} />
               <Field label="Email" value={data.email} />
-              <Field label="Regular" value={data.esRegular ? 'Sí' : 'No'} />
               <Field label="Carrera" value={data.carrera} />
               <Field label="Fecha inscripción" value={data.fecha_inscripcion} />
             </Row>
           </CardBody>
         </Card>
 
-        <Card className="mb-3">
-          <CardHeader>Domicilios</CardHeader>
-          <CardBody>
-            <Row>
-              <Field label="Calle (procedencia)" value={data.calle_procedencia} />
-              <Field label="Nro (procedencia)" value={data.nro_procedencia} />
-              <Field label="Localidad (procedencia)" value={data.localidad_procedencia} />
-              <Field label="Provincia (procedencia)" value={data.provincia_procedencia} />
-              <Field label="Calle (estudio)" value={data.calle_estudio} />
-              <Field label="Nro (estudio)" value={data.nro_estudio} />
-              <Field label="Localidad (estudio)" value={data.localidad_estudio} />
-              <Field label="Provincia (estudio)" value={data.provincia_estudio} />
-            </Row>
-          </CardBody>
-        </Card>
+      <Card className="mb-3">
+        <CardHeader>Domicilios</CardHeader>
+        <CardBody>
+          <Row>
+            <Col md={12} className="text-white mb-2"><strong>Domicilio de procedencia</strong></Col>
+            <Field label="Calle" value={data.calle_procedencia} />
+            <Field label="Número" value={data.nro_procedencia} />
+            <Field label="Localidad" value={data.localidad_procedencia} />
+            <Field label="Provincia" value={data.provincia_procedencia} />
+            <Col md={12}><hr className="border-secondary"/></Col>
+            <Col md={12} className="text-white mb-2"><strong>Domicilio durante el período de clases</strong></Col>
+            <Field label="Calle" value={data.calle_estudio} />
+            <Field label="Número" value={data.nro_estudio} />
+            <Field label="Localidad" value={data.localidad_estudio} />
+            <Field label="Provincia" value={data.provincia_estudio} />
+          </Row>
+        </CardBody>
+      </Card>
 
-        <Card className="mb-3">
-          <CardHeader>Datos familiares</CardHeader>
-          <CardBody>
-            <Row>
-              <Field label="Estado civil" value={data.estado_civil} />
-              <Field label="Cant. hijos" value={data.cant_hijos} />
-              <Field label="Nombre padre" value={data.nombre_padre} />
-              <Field label="Apellido padre" value={data.apellido_padre} />
-              <Field label="Vive padre" value={data.vive_padre ? 'Sí' : 'No'} />
-              <Field label="Nivel estudio padre" value={data.nivel_estudio_padre} />
-              <Field label="Nombre madre" value={data.nombre_madre} />
-              <Field label="Apellido madre" value={data.apellido_madre} />
-              <Field label="Vive madre" value={data.vive_madre ? 'Sí' : 'No'} />
-              <Field label="Nivel estudio madre" value={data.nivel_estudio_madre} />
-            </Row>
-          </CardBody>
-        </Card>
+      <Card className="mb-3">
+        <CardHeader>Datos familiares</CardHeader>
+        <CardBody>
+          <Row>
+            <Field label="Estado civil" value={data.estado_civil} />
+            <Field label="Cantidad de hijos" value={data.cant_hijos} />
+            <Col md={12}><hr className="border-secondary"/></Col>
+            <Col md={12} className="text-white mb-2"><strong>Datos del padre</strong></Col>
+            <Field label="Nombre" value={data.nombre_padre} />
+            <Field label="Apellido" value={data.apellido_padre} />
+            <Field label="Vive" value={data.vive_padre ? 'Sí' : 'No'} />
+            <Field label="Máximo nivel de estudios cursados" value={data.nivel_estudio_padre} />
+            <Col md={12}><hr className="border-secondary"/></Col>
+            <Col md={12} className="text-white mb-2"><strong>Datos de la madre</strong></Col>
+            <Field label="Nombre" value={data.nombre_madre} />
+            <Field label="Apellido" value={data.apellido_madre} />
+            <Field label="Vive" value={data.vive_madre ? 'Sí' : 'No'} />
+            <Field label="Máximo nivel de estudios cursados" value={data.nivel_estudio_madre} />
+          </Row>
+        </CardBody>
+      </Card>
 
         <Card className="mb-3">
           <CardHeader>Datos ocupacionales</CardHeader>
           <CardBody>
             <Row>
               <Field label="Colegio secundario" value={data.colegio_secundario} />
-              <Field label="Año egreso secundario" value={data.anio_egreso_secundario} />
+              <Field label="Año de egreso secundario" value={data.anio_egreso_secundario} />
               <Field label="Condición laboral" value={data.condicion_laboral} />
             </Row>
           </CardBody>
@@ -114,4 +120,3 @@ class AlumnoDetail extends Component {
 }
 
 export default AlumnoDetail;
-
