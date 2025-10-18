@@ -11,6 +11,7 @@ import Localidades from '../../views/Locaciones/Localidades/';
 import Provincias from '../../views/Locaciones/Provincias/';
 
 import Clientes from '../../views/Clientes/';
+import AlumnoDetail from '../../views/Clientes/AlumnoDetail';
 import Mapa from '../../views/Clientes/Mapa.js';
 
 import Usuarios from '../../views/Usuarios/Usuarios/';
@@ -35,7 +36,8 @@ class Full extends Component {
                 <Route path="/configuracion/geo/localidades" name="Localidades" component={Localidades}/>
                 <Route path="/configuracion/geo/provincias" name="Provincias" component={Provincias}/>
                 
-                <Route path="/alumnos" name="Alumnos" component={Clientes}/>
+                <Route exact path="/alumnos" name="Alumnos" component={Clientes}/>
+                <Route path="/alumnos/:id" name="Alumno" component={AlumnoDetail}/>
                 <Route path="/mapa" name="Mapa" component={Mapa}/>
 
 

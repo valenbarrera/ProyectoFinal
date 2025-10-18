@@ -135,6 +135,7 @@ def List(request):
     db_query = (
         Datos_domicilio.objects.select_related('alumno', 'localidad_procedencia__provincia')
         .annotate(
+            pk=F('alumno__pk'),
             nombre=F('alumno__nombre'),
             apellido=F('alumno__apellido'),
             domicilio=Concat(F('calle_procedencia'), Value(' '), F('nro_procedencia')),
@@ -196,8 +197,76 @@ def Edit(request, id):
 @authentication_classes((TokenAuthentication, BasicAuthentication))
 @permission_classes((IsAuthenticated,))
 def Detail(request, id):
-    obj = Alumnos.objects.get(pk=id)
-    return JsonResponse(obj.json(),safe=False)
+    # Detalle completo del alumno con tablas relacionadas
+    from Datos_domicilio.models import Datos_domicilio
+    from Datos_familiares.models import Datos_familiares
+    from Datos_ocupacionales.models import Datos_ocupacionales
+
+    a = Alumnos.objects.get(pk=id)
+    dom = Datos_domicilio.objects.filter(alumno=a).select_related(
+        'localidad_procedencia__provincia', 'localidad_estudio__provincia'
+    ).first()
+    fam = Datos_familiares.objects.filter(alumno=a).first()
+    ocu = Datos_ocupacionales.objects.filter(alumno=a).first()
+
+    def loc_tuple(loc):
+        if not loc:
+            return None, None
+        return (loc.nombre, getattr(loc.provincia, 'nombre', None))
+
+    lp_nombre, pp_nombre = loc_tuple(dom.localidad_procedencia) if dom else (None, None)
+    le_nombre, pe_nombre = loc_tuple(dom.localidad_estudio) if dom else (None, None)
+
+    data = {
+        'pk': a.pk,
+        'nombre': a.nombre,
+        'apellido': a.apellido,
+        'genero': a.genero,
+        'pais_documento': a.pais_documento,
+        'tipo_documento': a.tipo_documento,
+        'nro_documento': a.nro_documento,
+        'nacionalidad': a.nacionalidad,
+        'cuil': a.cuil,
+        'pueblos_originarios': a.pueblos_originarios,
+        'obra_social': a.obra_social,
+        'telefono': a.telefono,
+        'email': a.email,
+        'esRegular': a.esRegular,
+        'carrera': a.carrera,
+        'fecha_inscripcion': a.fecha_inscripcion,
+    }
+    if dom:
+        data.update({
+            'calle_procedencia': dom.calle_procedencia,
+            'nro_procedencia': dom.nro_procedencia,
+            'calle_estudio': dom.calle_estudio,
+            'nro_estudio': dom.nro_estudio,
+            'localidad_procedencia': lp_nombre,
+            'provincia_procedencia': pp_nombre,
+            'localidad_estudio': le_nombre,
+            'provincia_estudio': pe_nombre,
+        })
+    if fam:
+        data.update({
+            'estado_civil': fam.estado_civil,
+            'cant_hijos': fam.cant_hijos,
+            'nombre_padre': fam.nombre_padre,
+            'apellido_padre': fam.apellido_padre,
+            'vive_padre': fam.vive_padre,
+            'nivel_estudio_padre': fam.nivel_estudio_padre,
+            'nombre_madre': fam.nombre_madre,
+            'apellido_madre': fam.apellido_madre,
+            'vive_madre': fam.vive_madre,
+            'nivel_estudio_madre': fam.nivel_estudio_madre,
+        })
+    if ocu:
+        data.update({
+            'colegio_secundario': ocu.colegio_secundario,
+            'anio_egreso_secundario': ocu.anio_egreso_secundario,
+            'condicion_laboral': ocu.condicion_laboral,
+        })
+
+    return JsonResponse(data, safe=False)
 
 @api_view(['GET','POST'])
 @authentication_classes((TokenAuthentication, BasicAuthentication))
