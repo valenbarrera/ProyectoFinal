@@ -213,12 +213,12 @@ class UnsTableHeader extends Component {
 
                         <Dropdown className="d-inline-block mr-2" isOpen={this.state.dropdownDebajaOpen} toggle={() => this.setState({  dropdownDebajaOpen: !this.state.dropdownDebajaOpen })}>
                             <DropdownToggle caret className="btn-sm btn-secondary">
-                                {this.props.debajaFilter === null ? "Todos" : (this.props.debajaFilter === false ? "Activos" : "De baja")}
+                                {this.props.debajaFilter === null ? "Todos" : (this.props.debajaFilter === true ? "Regulares" : "No regulares")}
                             </DropdownToggle>
                             <DropdownMenu>
                                 <DropdownItem onClick={() => this.props.onDebajaFilterChange(null)}>Todos</DropdownItem>
-                                <DropdownItem onClick={() => this.props.onDebajaFilterChange(false)}>Activos</DropdownItem>
-                                <DropdownItem onClick={() => this.props.onDebajaFilterChange(true)}>De baja</DropdownItem>
+                                <DropdownItem onClick={() => this.props.onDebajaFilterChange(true)}>Regulares</DropdownItem>
+                                <DropdownItem onClick={() => this.props.onDebajaFilterChange(false)}>No regulares</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
 

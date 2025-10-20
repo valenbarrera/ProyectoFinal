@@ -73,8 +73,8 @@ class UnsTable extends Component {
         };
 
         if (this.state.debajaFilter !== null) {
-            exportObject.table.filtered = exportObject.table.filtered.filter(f => f.id !== "debaja");
-            exportObject.table.filtered.push({ id: "debaja", value: this.state.debajaFilter });
+            exportObject.table.filtered = exportObject.table.filtered.filter(f => f.id !== "alumno__esRegular");
+            exportObject.table.filtered.push({ id: "alumno__esRegular", value: this.state.debajaFilter });
         }
 
         getUrl += JSON.stringify(exportObject);
@@ -126,8 +126,8 @@ class UnsTable extends Component {
             let appliedFilters = [...(self.state.persistedFilters || [])];
 
             if (debajaFilter !== null) {
-                appliedFilters = appliedFilters.filter(f => f.id !== "debaja");
-                appliedFilters.push({ id: "debaja", value: debajaFilter });
+                appliedFilters = appliedFilters.filter(f => f.id !== "alumno__esRegular");
+                appliedFilters.push({ id: "alumno__esRegular", value: debajaFilter });
             }
 
             self.requestData(
