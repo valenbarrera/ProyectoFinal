@@ -291,7 +291,20 @@ def Delete(request, id):
 
 def Export(request):
     obj_data = json.loads(request.GET.get('data'))
-    db_query = Alumnos.objects.filter()
+    db_query = (
+        Datos_domicilio.objects.select_related('alumno', 'localidad_procedencia__provincia')
+        .annotate(
+            pk=F('alumno__pk'),
+            nombre=F('alumno__nombre'),
+            apellido=F('alumno__apellido'),
+            domicilio=Concat(F('calle_procedencia'), Value(' '), F('nro_procedencia')),
+            localidad_nombre=F('localidad_procedencia__nombre'),
+            provincia_nombre=F('localidad_procedencia__provincia__nombre'),
+            carrera=F('alumno__carrera'),
+            fecha_inscripcion=F('alumno__fecha_inscripcion'),
+        )
+        .order_by('alumno__apellido', 'alumno__nombre')
+    )
     return list_reports.file_default_export(db_query,'Alumnos',obj_data)
 
 

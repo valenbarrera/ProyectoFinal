@@ -273,6 +273,10 @@ class UnsTable extends Component {
             mode: mode,
             landscape: landscape
         };
+        if (this.state.debajaFilter !== null) {
+            exportObject.table.filtered = (exportObject.table.filtered || []).filter(f => f.id !== "alumno__esRegular");
+            exportObject.table.filtered.push({ id: "alumno__esRegular", value: this.state.debajaFilter });
+        }
         getUrl += JSON.stringify(exportObject);
         window.open(getUrl);
     }

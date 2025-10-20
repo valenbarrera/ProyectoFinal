@@ -108,5 +108,5 @@ def Delete(request, id):
 
 def Export(request):
     obj_data = json.loads(request.GET.get('data'))
-    db_query = Provincias.objects.filter(debaja=False)
+    db_query = Provincias.objects.filter()
     return list_reports.file_default_export(db_query,'Provincias',obj_data)
