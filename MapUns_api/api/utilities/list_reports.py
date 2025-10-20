@@ -21,6 +21,21 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, TableStyle
 
 from utilities import list_utils
 
+def _extract_header_name(header):
+    if isinstance(header, str):
+        return header
+
+    if isinstance(header, dict):
+        props = header.get('props') if isinstance(header.get('props'), dict) else None
+        if props and 'children' in props:
+            children = props.get('children')
+            if isinstance(children, list):
+                return ''.join([c if isinstance(c, str) else str(c) for c in children])
+            return str(children)
+        t = header.get('type')
+        return str(t) if t is not None else 'Columna'
+    return str(header)
+
 def fl_scale(fl_value):
     return int(fl_value * 0.36)
 
@@ -39,12 +54,23 @@ def file_default_export(db_query, str_nombre, obj_data):
 
     ar_tmpcolumns = []
     for column in obj_data['columns']:
-        if column['show']:
-            ar_tmpcolumns.append(column)
+        if column.get('show'):
+            header_text = _extract_header_name(column.get('Header'))
+            ar_tmpcolumns.append({
+                **column,
+                'Header': header_text,
+            })
 
     obj_data['columns'] = ar_tmpcolumns
 
-    ar_columns = [{'id': column['id'], 'width': column.get('width', None), 'name': column['Header']} for column in obj_data['columns']]
+    ar_columns = [
+        {
+            'id': column['id'],
+            'width': column.get('width', None),
+            'name': column.get('Header')
+        }
+        for column in obj_data['columns']
+    ]
 
     ar_column_names = [column['id'] for column in obj_data['columns']]
 
@@ -152,4 +178,3 @@ def excel_generate(response, str_nombre, ar_lista, ar_columns):
 
 def fl_gety(fl_y):
     return fl_height - fl_y
-
