@@ -95,7 +95,7 @@ class Ejemplo extends Component {
                 onRowDoubleClick={(row) => {
                     if (row && row.pk) {
                         if (this.props && this.props.history && this.props.history.push) {
-                            this.props.history.push(`/alumnos/${row.pk}`);
+                            this.props.history.push({ pathname: `/alumnos/${row.pk}`, state: { from: 'lista' } });
                         } else {
                             window.location.hash = `#/alumnos/${row.pk}`;
                         }

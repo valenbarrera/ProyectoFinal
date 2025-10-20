@@ -37,9 +37,12 @@ class AlumnoDetail extends Component {
     if (loading) return <div className="p-3">Cargando...</div>;
     if (!data) return <div className="p-3">No se encontró el alumno.</div>;
 
+    const from = (this.props && this.props.location && this.props.location.state && this.props.location.state.from) || null;
+    const backPath = from === 'mapa' ? '/mapa' : '/alumnos';
+
     return (
       <div className="p-2">
-        <div className="mb-2"><Link to="/alumnos" className="btn btn-light">← Volver</Link></div>
+        <div className="mb-2"><Link to={backPath} className="btn btn-light">← Volver</Link></div>
 
         <Card className="mb-3">
           <CardHeader>Datos personales</CardHeader>

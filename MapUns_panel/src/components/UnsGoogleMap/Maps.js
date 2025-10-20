@@ -5,6 +5,7 @@ import MarkerClusterGroup from "react-leaflet-markercluster";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./Maps.scss";
+import { Link } from "react-router-dom";
 
 
 const createCustomIcon = (color = "#007bff") =>
@@ -81,6 +82,16 @@ export default class Maps extends Component {
                   <p><b>Domicilio:</b> {mk.domicilio}</p>
                   <p><b>Carrera:</b> {mk.carrera}</p>
                   {mk.telefono && <p><b>Tel:</b> {mk.telefono}</p>}
+                  {mk.pk && (
+                    <div style={{ marginTop: 8 }}>
+                      <Link
+                        to={{ pathname: `/alumnos/${mk.pk}`, state: { from: 'mapa' } }}
+                        className="btn btn-sm map-popup-button"
+                      >
+                        Ver detalle
+                      </Link>
+                    </div>
+                  )}
                 </div>
               </Popup>
             </Marker>

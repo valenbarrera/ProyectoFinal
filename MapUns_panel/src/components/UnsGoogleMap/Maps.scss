@@ -1,3 +1,21 @@
+$CC1: null; // placeholder for IDE hints
+@import '../../../scss/_customcolors.scss';
+
+// Popup action button styled with theme color CC1
+.btn.map-popup-button {
+  background-color: $CC1;
+  color: #fff;
+  border-color: darken($CC1, 6%);
+}
+
+.btn.map-popup-button:hover,
+.btn.map-popup-button:focus {
+  background-color: darken($CC1, 6%);
+  color: #fff;
+  border-color: darken($CC1, 12%);
+  text-decoration: none;
+}
+
 $cluster-color-small: #007bff; 
 $cluster-color-medium: #28a745; 
 $cluster-color-large: #dc3545; 
