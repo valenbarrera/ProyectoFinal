@@ -114,6 +114,7 @@ def MapList(request):
         rows.append({
             'pk': d.alumno.pk,
             'nombre': d.alumno.nombre,
+            'apellido': d.alumno.apellido,
             'latitud': latf,
             'longitud': lonf,
             'domicilio': domicilio_txt,

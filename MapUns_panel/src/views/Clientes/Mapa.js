@@ -211,6 +211,7 @@ class Mapa extends Component {
             position: { lat: parseFloat(x.latitud), lng: parseFloat(x.longitud) },
             domicilio: x.domicilio,
             nombre: x.nombre,
+            apellido: x.apellido,
             carrera: x.carrera,
             telefono: x.telefono,
             weight: x.weight,
@@ -218,12 +219,14 @@ class Mapa extends Component {
         }));
         for (let i = 0; i < markers.length; i++) {
             let mk = markers[i];
-            let Component = () => (<div style={{ minWidth: '350px', maxWidth: '500px', minHeight: '40px' }}>
+            let Component = () => {
+                const fullName = mk.nombre + mk.apellido;
+                return (<div style={{ minWidth: '350px', maxWidth: '500px', minHeight: '40px' }}>
                 <div className="col-12 pr-0">
-                    <Label className=" d-inline-block"> <h2>{mk.nombre}</h2></Label>
+                    <Label className=" d-inline-block"> <h2>{fullName}</h2></Label>
                 </div>
                 <div className="col-12 pr-0"><Label className=" d-inline-block"> <h2>{mk.domicilio}</h2></Label></div>
-                <div className="col-12 pr-0"><Label className="d-inline-block">  <h6>Carrera: {mk.puesto}</h6></Label></div>
+                <div className="col-12 pr-0"><Label className="d-inline-block">  <h6>Carrera: {mk.carrera}</h6></Label></div>
                 <div className="col-12 pr-0">
                     <div style={{ width: '100%', height: '300px', backgroundColor: '#eeeeee' }}>
                         <ReactStreetview
@@ -237,6 +240,7 @@ class Mapa extends Component {
                     </div>
                 </div>
             </div>);
+            }
             mk.Component = Component;
         }
         return (
@@ -246,11 +250,11 @@ class Mapa extends Component {
                     {this.state.ubicacionTipo === 'procedencia' && (
                         <React.Fragment>
                             <div className="col-12 col-md-6 col-lg-4">
-                                <UnsLabeledInput label={"Provincia"} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker key={"prov_" + (this.state.provincia_id || "none")} onChange={(data) => this.onChangeProvincia(data)} fieldName={"provincia_id"} url={api.locaciones.provincias.select}
+                                <UnsLabeledInput label={<span style={{ color: 'white' }}>Provincia</span>} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker key={"prov_" + (this.state.provincia_id || "none")} onChange={(data) => this.onChangeProvincia(data)} fieldName={"provincia_id"} url={api.locaciones.provincias.select}
                                     nombreField={"nombre"} pkField={"id"} value={this.state.provincia_id} narrowToPkOnLoad={false} />} />
                             </div>
                             <div className="col-12 col-md-6 col-lg-4">
-                                <UnsLabeledInput label={"Localidad"} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker key={"loc_" + (this.state.provincia_id || "none")} onChange={(data) => this.onChangeLocalidad(data)}
+                                <UnsLabeledInput label={<span style={{ color: 'white' }}>Localidad</span>} labelColumns={3} fieldColumns={9} InputComponent={<UnsAsyncSeeker key={"loc_" + (this.state.provincia_id || "none")} onChange={(data) => this.onChangeLocalidad(data)}
                                     disabled={!this.state.provincia_id}
                                     fieldName={"localidad_id"}
                                     url={api.locaciones.localidades.select + (this.state.provincia_id ? ("?provincia_id=" + this.state.provincia_id + "&provincia=" + this.state.provincia_id + "&provincia__id=" + this.state.provincia_id + "&provincia_id__exact=" + this.state.provincia_id) : "")}

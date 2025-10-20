@@ -77,7 +77,7 @@ export default class Maps extends Component {
             >
               <Popup>
                 <div style={{ minWidth: "250px" }}>
-                  <h4>{mk.nombre}</h4>
+                  <h4>{mk.nombre} {mk.apellido}</h4>
                   <p><b>Domicilio:</b> {mk.domicilio}</p>
                   <p><b>Carrera:</b> {mk.carrera}</p>
                   {mk.telefono && <p><b>Tel:</b> {mk.telefono}</p>}
