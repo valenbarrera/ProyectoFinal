@@ -21,6 +21,7 @@ from ..models import Alumnos
 from Datos_domicilio.models import Datos_domicilio
 from Datos_familiares.models import Datos_familiares
 from Datos_ocupacionales.models import Datos_ocupacionales
+from utilities.geocoding import geocode_address, geocode_localidad
 
 
 def to_text(val):
@@ -83,6 +84,15 @@ def ensure_localidad_by_names(localidad_nombre, provincia_nombre):
     # Crear provincia (usa 'N/D' si pn vacío) y luego la localidad
     prov = ensure_provincia(pn)
     loc = Localidades(nombre=ln, provincia=prov)
+    # Intentar geocodificar la localidad al crearla
+    try:
+        coords = geocode_localidad(ln, prov.nombre)
+        if coords:
+            lat, lon = coords
+            loc.latitud = lat
+            loc.longitud = lon
+    except Exception:
+        pass
     loc.full_clean()
     loc.save()
     return loc
@@ -202,14 +212,34 @@ def _upsert_row(row, counters, errors):
             dom = Datos_domicilio(alumno=alumno)
         dom.calle_procedencia = to_text(row.get('calle_procedencia')) or 'N/D'
         dom.nro_procedencia = to_text(row.get('nro_procedencia')) or 'S/N'
-        dom.lat_procedencia = to_float(row.get('lat_procedencia'))
-        dom.long_procedencia = to_float(row.get('long_procedencia'))
+        # Geocodificar procedencia a partir de dirección
+        try:
+            loc_name_p = (loc_proc.nombre if loc_proc else to_text(row.get('localidad_procedencia') or row.get('localidad')))
+            prov_name_p = (loc_proc.provincia.nombre if loc_proc and getattr(loc_proc, 'provincia', None) else to_text(row.get('provincia_procedencia') or row.get('provincia')))
+            coords_p = geocode_address(dom.calle_procedencia, dom.nro_procedencia, loc_name_p, prov_name_p)
+        except Exception:
+            coords_p = None
+        if coords_p:
+            dom.lat_procedencia, dom.long_procedencia = coords_p
+        else:
+            dom.lat_procedencia = 0.0
+            dom.long_procedencia = 0.0
         if loc_proc:
             dom.localidad_procedencia = loc_proc
         dom.calle_estudio = to_text(row.get('calle_estudio')) or 'N/D'
         dom.nro_estudio = to_text(row.get('nro_estudio')) or 'S/N'
-        dom.lat_estudio = to_float(row.get('lat_estudio'))
-        dom.long_estudio = to_float(row.get('long_estudio'))
+        # Geocodificar estudio a partir de dirección
+        try:
+            loc_name_e = (loc_est.nombre if loc_est else to_text(row.get('localidad_estudio') or row.get('localidad')))
+            prov_name_e = (loc_est.provincia.nombre if loc_est and getattr(loc_est, 'provincia', None) else to_text(row.get('provincia_estudio') or row.get('provincia')))
+            coords_e = geocode_address(dom.calle_estudio, dom.nro_estudio, loc_name_e, prov_name_e)
+        except Exception:
+            coords_e = None
+        if coords_e:
+            dom.lat_estudio, dom.long_estudio = coords_e
+        else:
+            dom.lat_estudio = 0.0
+            dom.long_estudio = 0.0
         if loc_est:
             dom.localidad_estudio = loc_est
         dom.full_clean()

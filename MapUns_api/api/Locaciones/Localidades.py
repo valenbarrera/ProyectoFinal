@@ -16,6 +16,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 import json, math
 
 from utilities import list_utils, list_reports
+from utilities.geocoding import geocode_localidad
 
 from .models import Localidades
 from Alumnos.models import Alumnos
@@ -75,6 +76,22 @@ def Create(request):
     dict_errors = dict()
     try:        
         new_obj = Localidades(**obj_data)
+       
+        if not obj_data.get('latitud') and not obj_data.get('longitud'):
+            try:
+                prov_name = None
+                try:
+                    prov_name = new_obj.provincia.nombre
+                except Exception:
+                    if new_obj.provincia_id:
+                        from .models import Provincias
+                        prov = Provincias.objects.filter(pk=new_obj.provincia_id).first()
+                        prov_name = prov.nombre if prov else None
+                coords = geocode_localidad(new_obj.nombre, prov_name)
+                if coords:
+                    new_obj.latitud, new_obj.longitud = coords
+            except Exception:
+                pass
         new_obj.full_clean()
         new_obj.save()
         return JsonResponse({"success":True,"pk":new_obj.pk})
@@ -95,6 +112,23 @@ def Edit(request, id):
         try:
             for attr, value in obj_data.items(): 
                 setattr(obj, attr, value)
+            
+            if (('nombre' in obj_data) or ('provincia' in obj_data) or ('provincia_id' in obj_data)) \
+               and not ('latitud' in obj_data and 'longitud' in obj_data):
+                try:
+                    prov_name = None
+                    try:
+                        prov_name = obj.provincia.nombre
+                    except Exception:
+                        if obj.provincia_id:
+                            from .models import Provincias
+                            prov = Provincias.objects.filter(pk=obj.provincia_id).first()
+                            prov_name = prov.nombre if prov else None
+                    coords = geocode_localidad(obj.nombre, prov_name)
+                    if coords:
+                        obj.latitud, obj.longitud = coords
+                except Exception:
+                    pass
             obj.full_clean()
             obj.save()
             return JsonResponse({"success":True})
