@@ -1,6 +1,10 @@
 import os
+from dotenv import load_dotenv
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Load environment variables from .env located at BASE_DIR
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 
 SECRET_KEY = 'klcyvu4opz%^3$z3yf+0@a2a%o6ivuw8%n&t$i_kx2=n8d))jz'
@@ -77,19 +81,14 @@ WSGI_APPLICATION = 'api.wsgi.application'
 
 
 DATABASES = {
-    #'default': {
-    #    'ENGINE': 'django.db.backends.sqlite3',
-    #    'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    #}
-
-    # #DB EN POSTGRESQL
+    # DB en PostgreSQL, valores desde variables de entorno
     'default': {
          'ENGINE': 'django.db.backends.postgresql_psycopg2',
-         'NAME': 'mapauns',
-         'USER': 'postgres',
-         'PASSWORD': 'postgres',
-         'HOST': 'localhost',
-         'PORT': '5432',
+         'NAME': os.getenv('DB_NAME', 'mapauns'),
+         'USER': os.getenv('DB_USER', 'postgres'),
+         'PASSWORD': os.getenv('DB_PASSWORD', 'postgres'),
+         'HOST': os.getenv('DB_HOST', 'localhost'),
+         'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
 
