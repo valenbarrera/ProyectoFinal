@@ -37,7 +37,9 @@ class Mapa extends Component {
             regular: null,
             carrera: null,
             tempActividad: null,
+            importStatus: null,
         };
+        this.hideImportTimeout = null;
     }
 
     handleUbicacionChange = (value) => {
@@ -102,6 +104,9 @@ class Mapa extends Component {
 
     componentWillUnmount() {
         this._isMounted = false;
+        if (this.hideImportTimeout) {
+            clearTimeout(this.hideImportTimeout);
+        }
     }
 
     FetchCarrerasOptions() {
@@ -117,6 +122,45 @@ class Mapa extends Component {
                     self.setState({ carrerasOptions: carreras });
                 }
             });
+    }
+
+    setImportStatus = (status, autoHide = false) => {
+        if (this.hideImportTimeout) {
+            clearTimeout(this.hideImportTimeout);
+            this.hideImportTimeout = null;
+        }
+        this.setState({ importStatus: status });
+        if (autoHide) {
+            this.hideImportTimeout = setTimeout(() => {
+                this.setState({ importStatus: null });
+                this.hideImportTimeout = null;
+            }, 6000);
+        }
+    }
+
+    renderImportSnackbar() {
+        const { importStatus } = this.state;
+        if (!importStatus) return null;
+        const counts = importStatus.counts;
+        const hasCounts = counts && typeof counts.created === 'number' && typeof counts.updated === 'number';
+        return (
+            <div className={`uns-snackbar uns-snackbar--${importStatus.phase}`}>
+                <div className="uns-snackbar__message">{importStatus.message}</div>
+                {hasCounts && (
+                    <div className="uns-snackbar__counts">
+                        Agregados: {counts.created} · Actualizados: {counts.updated}
+                    </div>
+                )}
+                {importStatus.detail && (
+                    <div className="uns-snackbar__detail">{importStatus.detail}</div>
+                )}
+                {importStatus.phase === 'uploading' && (
+                    <div className="uns-snackbar__progress">
+                        <div className="uns-snackbar__progress-bar" />
+                    </div>
+                )}
+            </div>
+        );
     }
 
     onChangeProvincia = (data) => {
@@ -272,6 +316,12 @@ class Mapa extends Component {
                             onChange={async (e) => {
                                 const file = e.target.files && e.target.files[0];
                                 if (!file) return;
+                                this.setImportStatus({
+                                    phase: 'uploading',
+                                    message: 'Procesando archivo...',
+                                    counts: null,
+                                    detail: null,
+                                });
                                 try {
                                     const form = new FormData();
                                     form.append('file', file);
@@ -281,15 +331,24 @@ class Mapa extends Component {
                                     const updated = typeof data.updated === 'number' ? data.updated : 0;
                                     const errors = Array.isArray(data.errors) ? data.errors : [];
                                     this.GetDirecciones(this.state.provincia_id, this.state.localidad_id);
-                                    let msg = `Importación completada. Creados: ${created}. Actualizados: ${updated}.`;
-                                    if (errors.length > 0) {
-                                        const sample = errors.slice(0, 3).map(e => `Fila ${e.row}: ${e.error}`).join("\n");
-                                        msg += `\nErrores: ${errors.length}.` + (sample ? `\nEjemplos:\n${sample}` : '');
-                                    }
-                                    alert(msg);
+                                    const sample = errors
+                                        .slice(0, 3)
+                                        .map(er => `Fila ${er.row}: ${er.error}`)
+                                        .join(' | ');
+                                    this.setImportStatus({
+                                        phase: errors.length > 0 ? 'warning' : 'success',
+                                        message: errors.length > 0 ? 'Importación completada con observaciones' : 'Importación completada con éxito',
+                                        counts: { created, updated },
+                                        detail: sample || (errors.length > 0 ? 'Revisá el archivo para ver los detalles.' : null),
+                                    }, true);
                                 } catch (err) {
                                     const msg = (err && err.response && err.response.data && (err.response.data.error || err.response.data.detail)) || 'Error al importar';
-                                    alert(msg);
+                                    this.setImportStatus({
+                                        phase: 'error',
+                                        message: 'Importación fallida',
+                                        counts: { created: 0, updated: 0 },
+                                        detail: msg,
+                                    }, true);
                                 } finally {
                                     e.target.value = '';
                                 }
@@ -333,6 +392,7 @@ class Mapa extends Component {
                         <DisplayToggle value={this.state.ubicacionTipo} onChange={this.handleUbicacionChange} disableEstudio={false} />
                     </div>
                 </div>
+                {this.renderImportSnackbar()}
             </div>
         );
     }

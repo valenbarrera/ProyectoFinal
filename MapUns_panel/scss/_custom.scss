@@ -42,7 +42,7 @@
 
 @include media-breakpoint-up(md) {
     .app.bgimg {
-        background: url('../public/img/login-bg.jpg');
+        background: url('../public/img/login-bg.jpeg');
         background-size: contain;
         .bgbackdrop {
             width: 100%;
@@ -364,5 +364,70 @@ label {
         background-color: unset;
         position: unset;
         padding: unset;
+    }
+}
+
+.uns-snackbar {
+    position: fixed;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+    background-color: rgba(33, 33, 33, 0.95);
+    color: #fff;
+    min-width: 280px;
+    max-width: 90vw;
+    border-radius: 6px;
+    padding: 12px 16px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+    z-index: 2000;
+    transition: opacity 0.2s ease-in-out;
+    font-size: 0.95rem;
+}
+
+.uns-snackbar--success {
+    background-color: #2e7d32;
+}
+
+.uns-snackbar--error {
+    background-color: #c62828;
+}
+
+.uns-snackbar--warning {
+    background-color: #ef6c00;
+}
+
+.uns-snackbar--uploading {
+    background-color: #424242;
+}
+
+.uns-snackbar__counts,
+.uns-snackbar__detail {
+    font-size: 0.85rem;
+    margin-top: 4px;
+    opacity: 0.9;
+}
+
+.uns-snackbar__progress {
+    width: 100%;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.uns-snackbar__progress-bar {
+    width: 40%;
+    height: 100%;
+    background-color: #fff;
+    animation: uns-indeterminate 1.4s infinite ease-in-out;
+}
+
+@keyframes uns-indeterminate {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(250%);
     }
 }
